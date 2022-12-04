@@ -12,12 +12,11 @@ module.exports = {
         filename: "bundle.js",
     },
     devServer: {
-        allowedHosts: 'all',
         devMiddleware: {
             publicPath: "/",
         },
         static: "./public",
-        port: 80,
+        port: 8080,
     },
     module: {
     }

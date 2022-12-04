@@ -1,32 +1,37 @@
-#solarphageapi
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
 
-name: Build and deploy to ACR
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+name: Deploy solarphage-ui
 
 env:
-  PROJECT_NAME: solarphage-ui             # set this to your project's name
-  RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}          # set this to the resource group containing your AKS cluster
-  REGISTRY_URL: ${{ secrets.REGISTRY_LOGIN_SERVER }}              # set this to the URL of your registry
+  APP_LOCATION: "/" # location of your client code
+  APP_ARTIFACT_LOCATION: "build" # location of client code build output
 
 on: [push]
 
+permissions:
+  issues: write
+  contents: read
+
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
+    name: Build and Deploy
     steps:
-    - uses: actions/checkout@v3
-
-    - uses: azure/docker-login@v1
-      with:
-        login-server: ${{ env.REGISTRY_URL }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-
-    - run: |
-        docker build -t ${{ env.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ github.sha }} .
-        docker push ${{ env.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ github.sha }}   
-
-    - uses: azure/webapps-deploy@v2
-      with:
-        app-name: '${{ env.PROJECT_NAME }}'
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        images: ${{ env.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ github.sha }}
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Build And Deploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.APP_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: ${{ env.APP_LOCATION }}
+          app_artifact_location: ${{ env.APP_ARTIFACT_LOCATION }}
