@@ -11,13 +11,13 @@ module.exports = {
         path: path.join(__dirname, "./public"),
         filename: "bundle.js",
     },
-    devServer: {
-        devMiddleware: {
-            publicPath: "/",
-        },
-        static: "./public",
-        port: 8080,
-    },
-    module: {
-    }
+    // devServer: {
+    //     devMiddleware: {
+    //         publicPath: "/",
+    //     },
+    //     static: "./public",
+    //     port: 8080,
+    // },
+    // module: {
+    // }
 }
