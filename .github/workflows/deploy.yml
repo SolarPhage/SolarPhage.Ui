@@ -27,6 +27,9 @@ jobs:
         with:
           submodules: true
       
+      - name: dotnet
+        uses: actions/setup-dotnet@v
+      
       - name: Restore
         run: dotnet tool restore
 
