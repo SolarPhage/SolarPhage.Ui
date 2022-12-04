@@ -27,6 +27,9 @@ jobs:
         with:
           submodules: true
       
+      - name: Restore
+        run: dotnet tool restore
+
       - name: Build
         run: npm run-script build
     
