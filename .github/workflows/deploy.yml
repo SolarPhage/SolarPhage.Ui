@@ -1,11 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# GitHub recommends pinning actions to a commit SHA.
-# To get a newer version, you will need to update the SHA.
-# You can also reference a tag or branch, but the action may change without warning.
+# solarphageui
 
 name: Deploy solarphage-ui
 
@@ -27,11 +20,11 @@ jobs:
         with:
           submodules: true
       
-      # - name: Restore
-      #   run: dotnet tool restore
+      - name: Restore
+        run: dotnet tool restore
 
-      # - name: Build
-      #   run: dotnet fable src --run webpack --mode production
+      - name: Build
+        run: dotnet fable src/App.fsproj --run webpack
     
       - name: Deploy
         uses: Azure/static-web-apps-deploy@v1

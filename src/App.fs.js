@@ -7,7 +7,7 @@ export const myButton = document.querySelector(".my-button");
 
 myButton.onclick = ((_arg) => {
     let arg;
-    count(count() + 3, true);
+    count(count() + 2, true);
     myButton.innerText = ((arg = (count() | 0), toText(printf("You clicked: %i time(s)"))(arg)));
 });
 
