@@ -24,11 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
-      
-      - name: dotnet
-        uses: actions/setup-dotnet@v2
       
       - name: Restore
         run: dotnet tool restore
