@@ -21,8 +21,9 @@ jobs:
           submodules: true
     
       - name: Build
-        run: dotnet tool restore
-        run: dotnet fable src && webpack
+        run: |
+          dotnet tool restore
+          dotnet fable src && webpack
     
       - name: Deploy
         uses: Azure/static-web-apps-deploy@v1
