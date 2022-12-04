@@ -10,7 +10,7 @@ on: [push]
 
 permissions:
   issues: write
-  contents: read
+  contents: write
 
 jobs:
   build_and_deploy:
