@@ -1,10 +1,9 @@
-# solarphageui
+# ui
 
-name: Deploy solarphage-ui
+name: Deploy ui
 
 env:
   APP_LOCATION: "public" # location of your client code
-  APP_ARTIFACT_LOCATION: "build" # location of client code build output
 
 on: [push]
 
@@ -19,13 +18,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
+
       - name: Build
         run: |
           dotnet tool restore
-          dotnet fable src && webpack
+          dotnet fable src --run webpack --mode development
     
       - name: Deploy
         uses: Azure/static-web-apps-deploy@v1
