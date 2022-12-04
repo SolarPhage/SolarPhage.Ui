@@ -34,4 +34,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: ${{ env.APP_LOCATION }}
+          output_location: "/public"
+          app_build_command: "npm run-script build"
           app_artifact_location: ${{ env.APP_ARTIFACT_LOCATION }}
