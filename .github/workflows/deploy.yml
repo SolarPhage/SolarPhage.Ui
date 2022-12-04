@@ -10,7 +10,7 @@
 name: Deploy solarphage-ui
 
 env:
-  APP_LOCATION: "public" # location of your client code
+  APP_LOCATION: "/" # location of your client code
   APP_ARTIFACT_LOCATION: "build" # location of client code build output
 
 on: [push]
@@ -22,10 +22,10 @@ permissions:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    name: Build
-    run: npm run-script build
-    name: Deploy
+    name: Build & Deploy
     steps:
+        run: npm run-script build
+        
       - uses: actions/checkout@v3
         with:
           submodules: true
@@ -36,6 +36,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: ${{ env.APP_LOCATION }}
-          skip_app_build: true
           
           #app_artifact_location: ${{ env.APP_ARTIFACT_LOCATION }}
