@@ -8,9 +8,7 @@ env:
 
 on: [push]
 
-permissions:
-  issues: write
-  contents: write
+permissions: write-all
 
 jobs:
   build_and_deploy:
