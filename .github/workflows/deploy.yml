@@ -21,8 +21,9 @@ jobs:
 
       - name: Build
         run: |
+          npx webpack
           dotnet tool restore
-          dotnet fable src && webpack --mode production
+          dotnet fable src
     
       - name: Deploy
         uses: Azure/static-web-apps-deploy@v1
