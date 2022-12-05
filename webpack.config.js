@@ -7,17 +7,18 @@ var path = require("path");
 module.exports = {
     mode: "production",
     entry: "./src/App.fs.js",
+    watch: "false",
     output: {
         path: path.join(__dirname, "./public"),
         filename: "bundle.js",
     },
-    // devServer: {
-    //     devMiddleware: {
-    //         publicPath: "/",
-    //     },
-    //     static: "./public",
-    //     port: 8080,
-    // },
-    // module: {
-    // }
+    devServer: {
+        devMiddleware: {
+            publicPath: "/",
+        },
+        static: "./public",
+        port: 8080,
+    },
+    module: {
+    }
 }
