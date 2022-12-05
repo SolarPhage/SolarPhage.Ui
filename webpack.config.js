@@ -7,7 +7,6 @@ var path = require("path");
 module.exports = {
     mode: "production",
     entry: "./src/App.fs.js",
-    watch: false,
     output: {
         path: path.join(__dirname, "./public"),
         filename: "bundle.js",
@@ -20,18 +19,5 @@ module.exports = {
         port: 8080,
     },
     module: {
-    },
-    plugins: [
-        // Added this to plugins in webpack config
-        {
-           apply: (compiler) => {
-             compiler.hooks.done.tap('DonePlugin', (stats) => {
-               console.log('Compile is done !');
-               setTimeout(() => {
-                 process.exit(0);
-               });
-             });
-           }
-        }
-      ]
+    }
 }
