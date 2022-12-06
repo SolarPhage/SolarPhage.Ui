@@ -22,6 +22,7 @@ jobs:
       - name: Build
         run: |
           dotnet tool restore
+          dotnet restore src/App.fsproj
           dotnet fable src --verbose
     
       - name: Deploy
