@@ -22,7 +22,7 @@ jobs:
       - name: Build
         run: |
           dotnet tool restore
-          dotnet fable src --verbose --noCache
+          dotnet fable src --verbose --noRestore
     
       # - name: Deploy
       #   uses: Azure/static-web-apps-deploy@v1
