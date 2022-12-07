@@ -20,6 +20,8 @@ jobs:
       - name: Build
         run: |
           dotnet tool restore
+          dotnet fable clean src
+          y
           dotnet fable src
     
       - name: Deploy
