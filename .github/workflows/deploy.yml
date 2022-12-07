@@ -30,7 +30,6 @@ jobs:
       - name: Build
         run: |
           dotnet tool restore
-          dotnet install
           npm ci
           dotnet fable src --verbose
     
