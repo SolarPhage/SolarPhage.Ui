@@ -16,14 +16,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with: 
+          submodules: true
+      
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
       - name: Build
         run: |
           dotnet tool restore
-          dotnet fable src --verbose --noCache
+          dotnet install
+          npm ci
+          dotnet fable src --verbose
     
       - name: Deploy
         uses: Azure/static-web-apps-deploy@v1
+        env:
+          PRE_BUILD_COMMAND: dotnet tool restore
         with:
           azure_static_web_apps_api_token: ${{ secrets.APP_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
