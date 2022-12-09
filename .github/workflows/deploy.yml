@@ -31,11 +31,11 @@ jobs:
           dotnet tool restore
           dotnet fable src && webpack --mode production
     
-      # - name: Deploy
-      #   uses: Azure/static-web-apps-deploy@v1
-      #   with:
-      #     azure_static_web_apps_api_token: ${{ secrets.APP_TOKEN }}
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-      #     action: "upload"
-      #     app_location: ${{ env.APP_LOCATION }}
-      #     skip_app_build: true
+      - name: Deploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.APP_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: ${{ env.APP_LOCATION }}
+          skip_app_build: true
