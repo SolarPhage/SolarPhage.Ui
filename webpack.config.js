@@ -2,10 +2,12 @@
 // For a more comprehensive configuration check:
 // https://github.com/fable-compiler/webpack-config-template
 
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 var path = require("path");
 
 module.exports = {
-    mode: "production",
+    mode: "productions",
     entry: "./src/App.fs.js",
     output: {
         path: path.join(__dirname, "./public"),
@@ -19,5 +21,25 @@ module.exports = {
         port: 8080,
     },
     module: {
-    }
+        rules: [{
+          test: /\.scss$/,
+          use: [
+              MiniCssExtractPlugin.loader,
+              {
+                loader: 'css-loader'
+              },
+              {
+                loader: 'sass-loader',
+                options: {
+                  sourceMap: true,
+                }
+              }
+            ]
+        }]
+      },
+      plugins: [
+        new MiniCssExtractPlugin({
+          filename: 'css/main.css'
+        }),
+      ]
 }
