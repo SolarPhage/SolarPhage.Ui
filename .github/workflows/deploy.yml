@@ -29,6 +29,7 @@ jobs:
       - name: Build
         run: |
           dotnet tool restore
+          npm install
           dotnet fable src && webpack --mode production
     
       - name: Deploy
