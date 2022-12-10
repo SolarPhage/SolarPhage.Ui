@@ -2,7 +2,7 @@
 // For a more comprehensive configuration check:
 // https://github.com/fable-compiler/webpack-config-template
 
-const MiniCssExtractPlugin = require("./node_modules/mini-css-extract-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 var path = require("path");
 
