@@ -1,14 +1,46 @@
 module App
 
-open Browser.Dom
+open Elmish
+open Elmish.React
+open Feliz
+open Fulma.Elmish
+open Fable.React
 
-// Mutable variable to count the number of times we clicked the button
-let mutable count = 0
+Fable.Core.JsInterop.importAll "./scss/main.scss"
 
-// Get a reference to our button and cast the Element to an HTMLButtonElement
-let myButton = document.querySelector(".my-button") :?> Browser.Types.HTMLButtonElement
+type State = 
+    { Count : int }
 
-// Register our listener
-myButton.onclick <- fun _ ->
-    count <- count + 2
-    myButton.innerText <- sprintf "You clicked: %i time[s]" count
+type Msg = 
+    | Increment
+    | Decrement
+
+let init() = 
+    { Count = 0 }
+
+let update (msg: Msg) (state: State) : State = 
+    match msg with
+    | Increment ->
+        { state with Count = state.Count + 1 }
+    
+    | Decrement ->
+        { state with Count = state.Count - 1 }
+
+let render (state: State) (dispatch: Msg -> unit) = 
+    Html.div [
+        Html.button [
+            prop.onClick (fun _ -> dispatch Increment)
+            prop.text "Increment"
+        ]
+
+        Html.button [
+            prop.onClick (fun _ -> dispatch Decrement)
+            prop.text "Decrement"
+        ]
+
+        Html.h1 state.Count
+    ]
+
+Program.mkSimple init update render
+|> Program.withReactSynchronous "elmish-app"
+|> Program.run
