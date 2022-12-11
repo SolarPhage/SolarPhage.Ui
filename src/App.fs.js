@@ -1,69 +1,108 @@
 import * as main from "./scss/main.scss";
-import { Union, Record } from "./fable_modules/fable-library.3.7.20/Types.js";
-import { union_type, record_type, int32_type } from "./fable_modules/fable-library.3.7.20/Reflection.js";
-import { createElement } from "react";
-import { ofArray } from "./fable_modules/fable-library.3.7.20/List.js";
-import { Interop_reactApi } from "./fable_modules/Feliz.1.68.0/./Interop.fs.js";
+import { Model, Page } from "./Types.fs.js";
+import { render as render_1 } from "./Views/CharacterSelect.fs.js";
+import { render as render_2 } from "./Views/CombatMenu.fs.js";
+import { render as render_3 } from "./Views/CombatPhotocastsMenu.fs.js";
+import { render as render_4 } from "./Views/CombatPotionMenu.fs.js";
+import { render as render_5 } from "./Views/CreateCharacter.fs.js";
+import { render as render_6 } from "./Views/CreateGame.fs.js";
+import { render as render_7 } from "./Views/DungeonMenu.fs.js";
+import { render as render_8 } from "./Views/GameCharacterMenu.fs.js";
+import { render as render_9 } from "./Views/GameInventoryMenu.fs.js";
+import { render as render_10 } from "./Views/GameInventoryPhotocastMenu.fs.js";
+import { render as render_11 } from "./Views/GameMenu.fs.js";
+import { render as render_12 } from "./Views/GamePhotocastMenu.fs.js";
+import { render as render_13 } from "./Views/MainMenu.fs.js";
+import { render as render_14 } from "./Views/PostCombatMenu.fs.js";
+import { render as render_15 } from "./Views/ShopBuyItem.fs.js";
+import { render as render_16 } from "./Views/ShopInventoryItem.fs.js";
+import { render as render_17 } from "./Views/ShopMenu.fs.js";
+import { render as render_18 } from "./Views/TownMenu.fs.js";
+import { render as render_19 } from "./Views/ActiveGameMenu.fs.js";
 import { ProgramModule_mkSimple, ProgramModule_run } from "./fable_modules/Fable.Elmish.3.1.0/program.fs.js";
 import { Program_withReactSynchronous } from "./fable_modules/Fable.Elmish.React.3.0.1/react.fs.js";
 
 
-export class State extends Record {
-    constructor(Count) {
-        super();
-        this.Count = (Count | 0);
-    }
-}
-
-export function State$reflection() {
-    return record_type("App.State", [], State, () => [["Count", int32_type]]);
-}
-
-export class Msg extends Union {
-    constructor(tag, ...fields) {
-        super();
-        this.tag = (tag | 0);
-        this.fields = fields;
-    }
-    cases() {
-        return ["Increment", "Decrement"];
-    }
-}
-
-export function Msg$reflection() {
-    return union_type("App.Msg", [], Msg, () => [[], []]);
-}
-
 export function init() {
-    return new State(0);
+    return new Model(0, new Page(0));
 }
 
 export function update(msg, state) {
-    if (msg.tag === 1) {
-        return new State(state.Count - 1);
-    }
-    else {
-        return new State(state.Count + 1);
+    switch (msg.tag) {
+        case 1: {
+            return new Model(state.Count - 1, state.CurrentPage);
+        }
+        case 2: {
+            const page = msg.fields[0];
+            return new Model(state.Count, page);
+        }
+        default: {
+            return new Model(state.Count + 1, state.CurrentPage);
+        }
     }
 }
 
 export function render(state, dispatch) {
-    const children = ofArray([createElement("button", {
-        onClick: (_arg) => {
-            dispatch(new Msg(0));
-        },
-        children: "Increment",
-    }), createElement("button", {
-        onClick: (_arg_1) => {
-            dispatch(new Msg(1));
-        },
-        children: "Decrement",
-    }), createElement("h1", {
-        children: [state.Count],
-    })]);
-    return createElement("div", {
-        children: Interop_reactApi.Children.toArray(Array.from(children)),
-    });
+    const matchValue = state.CurrentPage;
+    switch (matchValue.tag) {
+        case 1: {
+            return render_1(dispatch);
+        }
+        case 15: {
+            return render_2(dispatch);
+        }
+        case 17: {
+            return render_3(dispatch);
+        }
+        case 16: {
+            return render_4(dispatch);
+        }
+        case 3: {
+            return render_5(dispatch);
+        }
+        case 4: {
+            return render_6(dispatch);
+        }
+        case 14: {
+            return render_7(dispatch);
+        }
+        case 10: {
+            return render_8(dispatch);
+        }
+        case 12: {
+            return render_9(dispatch);
+        }
+        case 13: {
+            return render_10(dispatch);
+        }
+        case 9: {
+            return render_11(dispatch);
+        }
+        case 11: {
+            return render_12(dispatch);
+        }
+        case 0: {
+            return render_13(dispatch);
+        }
+        case 18: {
+            return render_14(dispatch);
+        }
+        case 7: {
+            return render_15(dispatch);
+        }
+        case 8: {
+            return render_16(dispatch);
+        }
+        case 6: {
+            return render_17(dispatch);
+        }
+        case 5: {
+            return render_18(dispatch);
+        }
+        default: {
+            return render_19(dispatch);
+        }
+    }
 }
 
 ProgramModule_run(Program_withReactSynchronous("elmish-app", ProgramModule_mkSimple(init, update, render)));
