@@ -3,6 +3,26 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Types.fs" />
+    <Compile Include="Views/ActiveGameMenu.fs" />
+    <Compile Include="Views/CharacterSelect.fs" />
+    <Compile Include="Views/CombatMenu.fs" />
+    <Compile Include="Views/CombatPhotocastsMenu.fs" />
+    <Compile Include="Views/CombatPotionMenu.fs" />
+    <Compile Include="Views/CreateCharacter.fs" />
+    <Compile Include="Views/CreateGame.fs" />
+    <Compile Include="Views/DungeonMenu.fs" />
+    <Compile Include="Views/GameCharacterMenu.fs" />
+    <Compile Include="Views/GameInventoryMenu.fs" />
+    <Compile Include="Views/GameInventoryPhotocastMenu.fs" />
+    <Compile Include="Views/GameMenu.fs" />
+    <Compile Include="Views/GamePhotocastMenu.fs" />
+    <Compile Include="Views/MainMenu.fs" />
+    <Compile Include="Views/PostCombatMenu.fs" />
+    <Compile Include="Views/ShopBuyItem.fs" />
+    <Compile Include="Views/ShopInventoryItem.fs" />
+    <Compile Include="Views/ShopMenu.fs" />
+    <Compile Include="Views/TownMenu.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>

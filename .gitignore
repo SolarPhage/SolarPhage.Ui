@@ -1,6 +1,6 @@
 # Fable generated files
 .fable
-#*.fs.js
+*.fs.js
 # bundle.js //why?
 temp/**
 
