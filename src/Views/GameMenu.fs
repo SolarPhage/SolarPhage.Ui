@@ -5,18 +5,24 @@ open Feliz
 
 let render (dispatch: Msg -> unit) = 
     Html.div [
-        Html.button [
-            prop.onClick (fun _ -> dispatch <| ChangePage GameCharacterMenu)
-            prop.text "Character"
-        ]
+        prop.className "buttons"
+        prop.children [
+            Html.button [
+                prop.className[ "button" ]
+                prop.onClick (fun _ -> dispatch <| ChangePage GameCharacterMenu)
+                prop.text "Character"
+            ]
 
-        Html.button [
-            prop.onClick (fun _ -> dispatch <| ChangePage GameInventoryMenu)
-            prop.text "Inventory"
-        ]
+            Html.button [
+                prop.className[ "button" ]
+                prop.onClick (fun _ -> dispatch <| ChangePage GameInventoryMenu)
+                prop.text "Inventory"
+            ]
 
-        Html.button [
-            prop.onClick (fun _ -> dispatch <| ChangePage DungeonMenu)
-            prop.text "Back"
+            Html.button [
+                prop.className[ "button" ]
+                prop.onClick (fun _ -> dispatch <| ChangePage DungeonMenu)
+                prop.text "Back"
+            ]
         ]
     ]

@@ -2,29 +2,8 @@ module App
 
 open Elmish
 open Elmish.React
-open Feliz
-open Fulma.Elmish
-open Fable.React
 
 open App.Types
-
-open ActiveGameMenu
-open CharacterSelect
-open CombatMenu
-open CreateCharacter
-open CreateGame
-open DungeonMenu
-open GameCharacterMenu
-open GameInventoryMenu
-open GameInventoryPhotocastMenu
-open GameMenu
-open GamePhotocastMenu
-open MainMenu
-open PostCombatMenu
-open ShopBuyItem
-open ShopInventoryItem
-open ShopMenu
-open TownMenu
 
 Fable.Core.JsInterop.importAll "./scss/main.scss"
 

@@ -5,12 +5,17 @@ open Feliz
 
 let render (dispatch: Msg -> unit) = 
     Html.div [
-        Html.button [
-            prop.text "Sell"
-        ]
+        prop.className "buttons"
+        prop.children [
+            Html.button [
+                prop.className[ "button" ]
+                prop.text "Sell"
+            ]
 
-        Html.button [
-            prop.onClick (fun _ -> dispatch <| ChangePage ShopMenu)
-            prop.text "Back"
+            Html.button [
+                prop.className[ "button" ]
+                prop.onClick (fun _ -> dispatch <| ChangePage ShopMenu)
+                prop.text "Back"
+            ]
         ]
     ]
