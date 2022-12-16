@@ -6,40 +6,83 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 var path = require("path");
 
-module.exports = {
-    mode: "production",
-    entry: "./src/App.fs.js",
-    output: {
-        path: path.join(__dirname, "./public"),
-        filename: "bundle.js",
-    },
-    devServer: {
-        devMiddleware: {
-            publicPath: "/",
-        },
-        static: "./public",
-        port: 8080,
-    },
-    module: {
-        rules: [{
-          test: /\.scss$/,
-          use: [
-              MiniCssExtractPlugin.loader,
-              {
-                loader: 'css-loader'
-              },
-              {
-                loader: 'sass-loader',
-                options: {
-                  sourceMap: true,
-                }
-              }
-            ]
-        }]
+module.exports = () => {
+  switch(process.env['NODE_ENV']) {
+    case "development":
+      return development;
+    case "production":
+      return production;
+
+    default:
+      return production;
+  }
+}
+
+const development = {
+  mode: "development",
+  entry: "./src/App.fs.js",
+  output: {
+      path: path.join(__dirname, "./public"),
+      filename: "bundle.js",
+  },
+  devServer: {
+      devMiddleware: {
+          publicPath: "/",
       },
-      plugins: [
-        new MiniCssExtractPlugin({
-          filename: 'css/main.css'
-        }),
-      ]
+      static: "./public",
+      port: 8080,
+  },
+  module: {
+      rules: [{
+        test: /\.scss$/,
+        use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader'
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+              }
+            }
+          ]
+      }]
+    },
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: 'css/main.css'
+      }),
+    ]
+}
+
+const production = {
+  mode: "production",
+  entry: "./src/App.fs.js",
+  output: {
+      path: path.join(__dirname, "./public"),
+      filename: "bundle.js",
+  },
+  module: {
+      rules: [{
+        test: /\.scss$/,
+        use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader'
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+              }
+            }
+          ]
+      }]
+    },
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: 'css/main.css'
+      }),
+    ]
 }

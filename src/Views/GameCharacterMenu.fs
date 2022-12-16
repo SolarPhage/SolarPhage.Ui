@@ -5,13 +5,18 @@ open Feliz
 
 let render (dispatch: Msg -> unit) = 
     Html.div [
-        Html.button [
-            prop.onClick (fun _ -> dispatch <| ChangePage GamePhotocastMenu)
-            prop.text "Change Photocasts"
-        ]
+        prop.className "buttons"
+        prop.children [
+            Html.button [
+                prop.className[ "button" ]
+                prop.onClick (fun _ -> dispatch <| ChangePage GamePhotocastMenu)
+                prop.text "Change Photocasts"
+            ]
 
-        Html.button [
-            prop.onClick (fun _ -> dispatch <| ChangePage GameMenu)
-            prop.text "Back"
+            Html.button [
+                prop.className[ "button" ]
+                prop.onClick (fun _ -> dispatch <| ChangePage GameMenu)
+                prop.text "Back"
+            ]
         ]
     ]

@@ -2,8 +2,8 @@
   "private": true,
   "scripts": {
     "postinstall": "dotnet tool restore",
-    "start": "dotnet fable watch src --run webpack-dev-server",
-    "build": "dotnet fable src && webpack"
+    "start": "SET NODE_ENV=development && dotnet fable watch src --run webpack-dev-server",
+    "build": "NODE_ENV=production && dotnet fable src && webpack"
   },
   "devDependencies": {
     "mini-css-extract-plugin": "^2.7.2",
