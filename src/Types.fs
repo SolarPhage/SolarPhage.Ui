@@ -22,8 +22,8 @@ type Page =
     | PostCombatMenu
 
 type Msg = 
-    | Increment
-    | Decrement
+    | Increment of string
+    | Decrement of exn
     | ChangePage of Page
 
 type Model = 
