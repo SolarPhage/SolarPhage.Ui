@@ -4,22 +4,37 @@ open Elmish
 open Elmish.React
 
 open App.Types
+open Fable.Core.JsInterop
+open Fable.Core
+open Fable.Core.JS
+open Fable.SimpleHttp
 
-Fable.Core.JsInterop.importAll "./scss/main.scss"
+importAll "./scss/main.scss"
+
+[<Emit("process.env.APIURL")>]
+let apiUrl : string = jsNative
+let gamesUrl = apiUrl + "/game"
+
+let x y = 
+    async {
+        let! (statusCode, responseText) = Http.get gamesUrl
+
+        return responseText
+    }
 
 let init() = 
-    { Count = 0; CurrentPage = MainMenu }
+    { Count = 0; CurrentPage = MainMenu }, Cmd.none
 
-let update (msg: Msg) (state: Model) : Model = 
+let update (msg: Msg) (state: Model) = 
     match msg with
-    | Increment ->
-        { state with Count = state.Count + 1 }
+    | Increment x ->
+        { state with Count = state.Count + 1 }, Cmd.none
     
-    | Decrement ->
-        { state with Count = state.Count - 1 }
+    | Decrement y ->
+        { state with Count = state.Count - 1 }, Cmd.none
 
     | ChangePage page ->
-        { state with CurrentPage = page }
+        { state with CurrentPage = page }, Cmd.OfAsync.either x "test" Increment Decrement
 
 let render (state: Model) (dispatch: Msg -> unit) = 
     match state.CurrentPage with
@@ -43,6 +58,6 @@ let render (state: Model) (dispatch: Msg -> unit) =
     | ShopMenu -> ShopMenu.render dispatch
     | TownMenu -> TownMenu.render dispatch
 
-Program.mkSimple init update render
+Program.mkProgram init update render
 |> Program.withReactSynchronous "elmish-app"
 |> Program.run
