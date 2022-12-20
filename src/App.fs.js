@@ -1,6 +1,7 @@
 import * as main from "./scss/main.scss";
 import { singleton } from "./fable_modules/fable-library.3.7.20/AsyncBuilder.js";
 import { Http_get } from "./fable_modules/Fable.SimpleHttp.3.5.0/Http.fs.js";
+import { some } from "./fable_modules/fable-library.3.7.20/Option.js";
 import { Msg, Model, Page } from "./Types.fs.js";
 import { Cmd_none } from "./fable_modules/Fable.Elmish.3.1.0/cmd.fs.js";
 import { Cmd_OfAsync_start, Cmd_OfAsyncWith_either } from "./fable_modules/Fable.Elmish.3.1.0/./cmd.fs.js";
@@ -33,6 +34,8 @@ export function x(y) {
     return singleton.Delay(() => singleton.Bind(Http_get(gamesUrl), (_arg) => {
         const statusCode = _arg[0] | 0;
         const responseText = _arg[1];
+        console.log(some(statusCode));
+        console.log(some(responseText));
         return singleton.Return(responseText);
     }));
 }

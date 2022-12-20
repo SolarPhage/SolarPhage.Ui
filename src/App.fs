@@ -18,7 +18,8 @@ let gamesUrl = apiUrl + "/game"
 let x y = 
     async {
         let! (statusCode, responseText) = Http.get gamesUrl
-
+        console.log(statusCode)
+        console.log(responseText)
         return responseText
     }
 
