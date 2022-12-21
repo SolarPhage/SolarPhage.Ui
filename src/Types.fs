@@ -1,5 +1,7 @@
 module App.Types
 
+type Game = { GameId : int; MaxFloor : int }
+
 type Page = 
     | MainMenu
     | CharacterSelect
@@ -22,9 +24,10 @@ type Page =
     | PostCombatMenu
 
 type Msg = 
-    | Increment of string
-    | Decrement of exn
     | ChangePage of Page
+    | LoadGames
+    | LoadGamesCompleted of Game list
+    | FailedToLoad of exn
 
 type Model = 
-    { Count : int; CurrentPage : Page }
+    { Count : int; CurrentPage : Page; Games : Game list }

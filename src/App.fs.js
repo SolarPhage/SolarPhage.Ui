@@ -1,10 +1,14 @@
 import * as main from "./scss/main.scss";
 import { singleton } from "./fable_modules/fable-library.3.7.20/AsyncBuilder.js";
 import { Http_get } from "./fable_modules/Fable.SimpleHttp.3.5.0/Http.fs.js";
-import { some } from "./fable_modules/fable-library.3.7.20/Option.js";
-import { Msg, Model, Page } from "./Types.fs.js";
+import { SimpleJson_tryParse } from "./fable_modules/Fable.SimpleJson.3.24.0/./SimpleJson.fs.js";
+import { createTypeInfo } from "./fable_modules/Fable.SimpleJson.3.24.0/./TypeInfo.Converter.fs.js";
+import { Msg, Model, Page, Game$reflection } from "./Types.fs.js";
+import { list_type } from "./fable_modules/fable-library.3.7.20/Reflection.js";
+import { Convert_fromJson } from "./fable_modules/Fable.SimpleJson.3.24.0/./Json.Converter.fs.js";
+import { empty } from "./fable_modules/fable-library.3.7.20/List.js";
 import { Cmd_none } from "./fable_modules/Fable.Elmish.3.1.0/cmd.fs.js";
-import { Cmd_OfAsync_start, Cmd_OfAsyncWith_either } from "./fable_modules/Fable.Elmish.3.1.0/./cmd.fs.js";
+import { Cmd_OfFunc_result, Cmd_OfAsync_start, Cmd_OfAsyncWith_either } from "./fable_modules/Fable.Elmish.3.1.0/./cmd.fs.js";
 import { render as render_1 } from "./Views/CharacterSelect.fs.js";
 import { render as render_2 } from "./Views/CombatMenu.fs.js";
 import { render as render_3 } from "./Views/CombatPhotocastsMenu.fs.js";
@@ -30,35 +34,44 @@ import { Program_withReactSynchronous } from "./fable_modules/Fable.Elmish.React
 
 export const gamesUrl = (process.env.APIURL) + "/game";
 
-export function x(y) {
+export function getGames() {
     return singleton.Delay(() => singleton.Bind(Http_get(gamesUrl), (_arg) => {
+        let matchValue, inputJson, typeInfo;
         const statusCode = _arg[0] | 0;
         const responseText = _arg[1];
-        console.log(some(statusCode));
-        console.log(some(responseText));
-        return singleton.Return(responseText);
+        return singleton.Return((matchValue = SimpleJson_tryParse(responseText), (matchValue != null) ? ((inputJson = matchValue, (typeInfo = createTypeInfo(list_type(Game$reflection())), Convert_fromJson(inputJson, typeInfo)))) : (() => {
+            throw (new Error("Couldn\u0027t parse the input JSON string because it seems to be invalid"));
+        })()));
     }));
 }
 
 export function init() {
-    return [new Model(0, new Page(0)), Cmd_none()];
+    return [new Model(0, new Page(0), empty()), Cmd_none()];
 }
 
 export function update(msg, state) {
     switch (msg.tag) {
         case 1: {
-            const y = msg.fields[0];
-            return [new Model(state.Count - 1, state.CurrentPage), Cmd_none()];
+            return [state, Cmd_OfAsyncWith_either((x) => {
+                Cmd_OfAsync_start(x);
+            }, getGames, void 0, (arg) => (new Msg(2, arg)), (arg_1) => (new Msg(3, arg_1)))];
         }
         case 2: {
-            const page = msg.fields[0];
-            return [new Model(state.Count, page), Cmd_OfAsyncWith_either((x_2) => {
-                Cmd_OfAsync_start(x_2);
-            }, x, "test", (arg) => (new Msg(0, arg)), (arg_1) => (new Msg(1, arg_1)))];
+            const games = msg.fields[0];
+            return [new Model(state.Count, state.CurrentPage, games), Cmd_none()];
+        }
+        case 3: {
+            const error = msg.fields[0];
+            return [state, Cmd_none()];
         }
         default: {
-            const x_1 = msg.fields[0];
-            return [new Model(state.Count + 1, state.CurrentPage), Cmd_none()];
+            const page = msg.fields[0];
+            if (page.tag === 2) {
+                return [new Model(state.Count, page, state.Games), Cmd_OfFunc_result(new Msg(1))];
+            }
+            else {
+                return [new Model(state.Count, page, state.Games), Cmd_none()];
+            }
         }
     }
 }
@@ -121,7 +134,7 @@ export function render(state, dispatch) {
             return render_18(dispatch);
         }
         default: {
-            return render_19(dispatch);
+            return render_19(state, dispatch);
         }
     }
 }
