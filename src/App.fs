@@ -6,8 +6,8 @@ open Elmish.React
 open App.Types
 open Fable.Core.JsInterop
 open Fable.Core
-open Fable.Core.JS
 open Fable.SimpleHttp
+open Fable.SimpleJson
 
 importAll "./scss/main.scss"
 
@@ -15,31 +15,31 @@ importAll "./scss/main.scss"
 let apiUrl : string = jsNative
 let gamesUrl = apiUrl + "/game"
 
-let x y = 
+let getGames () = 
     async {
         let! (statusCode, responseText) = Http.get gamesUrl
-        console.log(statusCode)
-        console.log(responseText)
-        return responseText
+
+        return Json.parseAs<Game list> responseText
     }
 
 let init() = 
-    { Count = 0; CurrentPage = MainMenu }, Cmd.none
+    { Count = 0; CurrentPage = MainMenu; Games = [] }, Cmd.none
 
 let update (msg: Msg) (state: Model) = 
     match msg with
-    | Increment x ->
-        { state with Count = state.Count + 1 }, Cmd.none
-    
-    | Decrement y ->
-        { state with Count = state.Count - 1 }, Cmd.none
-
     | ChangePage page ->
-        { state with CurrentPage = page }, Cmd.OfAsync.either x "test" Increment Decrement
+        match page with
+        | ActiveGameMenu -> { state with CurrentPage = page }, Cmd.ofMsg LoadGames
+        | _ -> { state with CurrentPage = page }, Cmd.none
+    | LoadGames ->
+        state, Cmd.OfAsync.either getGames () LoadGamesCompleted FailedToLoad
+    | LoadGamesCompleted games ->
+        { state with Games = games }, Cmd.none
+    | FailedToLoad error -> state, Cmd.none
 
 let render (state: Model) (dispatch: Msg -> unit) = 
     match state.CurrentPage with
-    | ActiveGameMenu -> ActiveGameMenu.render dispatch
+    | ActiveGameMenu -> ActiveGameMenu.render state dispatch
     | CharacterSelect -> CharacterSelect.render dispatch
     | CombatMenu -> CombatMenu.render dispatch
     | CombatPhotocastsMenu -> CombatPhotocastsMenu.render dispatch
