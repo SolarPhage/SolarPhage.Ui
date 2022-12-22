@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Types.fs" />
+    <Compile Include="Views/Templates/SharedTemplate.fs" />
     <Compile Include="Views/ActiveGameMenu.fs" />
     <Compile Include="Views/CharacterSelect.fs" />
     <Compile Include="Views/CombatMenu.fs" />
