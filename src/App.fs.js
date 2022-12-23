@@ -1,14 +1,10 @@
 import * as main from "./scss/main.scss";
-import { singleton } from "./fable_modules/fable-library.3.7.20/AsyncBuilder.js";
-import { Http_get } from "./fable_modules/Fable.SimpleHttp.3.5.0/Http.fs.js";
-import { SimpleJson_tryParse } from "./fable_modules/Fable.SimpleJson.3.24.0/./SimpleJson.fs.js";
-import { createTypeInfo } from "./fable_modules/Fable.SimpleJson.3.24.0/./TypeInfo.Converter.fs.js";
-import { Msg, Model, Page, Game$reflection } from "./Types.fs.js";
-import { list_type } from "./fable_modules/fable-library.3.7.20/Reflection.js";
-import { Convert_fromJson } from "./fable_modules/Fable.SimpleJson.3.24.0/./Json.Converter.fs.js";
-import { empty } from "./fable_modules/fable-library.3.7.20/List.js";
-import { Cmd_none } from "./fable_modules/Fable.Elmish.3.1.0/cmd.fs.js";
-import { Cmd_OfFunc_result, Cmd_OfAsync_start, Cmd_OfAsyncWith_either } from "./fable_modules/Fable.Elmish.3.1.0/./cmd.fs.js";
+import { Msg, DataResult$1, Model, Game, Character, Page } from "./Types.fs.js";
+import { ofArray, singleton, empty } from "./fable_modules/fable-library.3.7.20/List.js";
+import { Cmd_none, Cmd_batch } from "./fable_modules/Fable.Elmish.4.0.0/cmd.fs.js";
+import { Cmd_OfAsync_start, Cmd_OfAsyncWith_either } from "./fable_modules/Fable.Elmish.4.0.0/./cmd.fs.js";
+import { getCharacters, getCharacter } from "./Infrastructure/Characters.fs.js";
+import { getGames, getGame } from "./Infrastructure/Games.fs.js";
 import { render as render_1 } from "./Views/CharacterSelect.fs.js";
 import { render as render_2 } from "./Views/CombatMenu.fs.js";
 import { render as render_3 } from "./Views/CombatPhotocastsMenu.fs.js";
@@ -28,49 +24,86 @@ import { render as render_16 } from "./Views/ShopInventoryItem.fs.js";
 import { render as render_17 } from "./Views/ShopMenu.fs.js";
 import { render as render_18 } from "./Views/TownMenu.fs.js";
 import { render as render_19 } from "./Views/ActiveGameMenu.fs.js";
-import { ProgramModule_mkProgram, ProgramModule_run } from "./fable_modules/Fable.Elmish.3.1.0/program.fs.js";
+import { ProgramModule_mkProgram, ProgramModule_run } from "./fable_modules/Fable.Elmish.4.0.0/program.fs.js";
 import { Program_withReactSynchronous } from "./fable_modules/Fable.Elmish.React.3.0.1/react.fs.js";
 
 
-export const gamesUrl = (process.env.APIURL) + "/game";
-
-export function getGames() {
-    return singleton.Delay(() => singleton.Bind(Http_get(gamesUrl), (_arg) => {
-        let matchValue, inputJson, typeInfo;
-        const statusCode = _arg[0] | 0;
-        const responseText = _arg[1];
-        return singleton.Return((matchValue = SimpleJson_tryParse(responseText), (matchValue != null) ? ((inputJson = matchValue, (typeInfo = createTypeInfo(list_type(Game$reflection())), Convert_fromJson(inputJson, typeInfo)))) : (() => {
-            throw (new Error("Couldn\u0027t parse the input JSON string because it seems to be invalid"));
-        })()));
-    }));
-}
-
 export function init() {
-    return [new Model(0, new Page(0), empty()), Cmd_none()];
+    return [new Model(0, new Page(0), new Character(0, "test", 0, false, empty()), empty(), new Game(5, 5), empty()), Cmd_batch(ofArray([singleton((dispatch) => {
+        dispatch(new Msg(4, new DataResult$1(0)));
+    }), singleton((dispatch_1) => {
+        dispatch_1(new Msg(2, new DataResult$1(0)));
+    })]))];
 }
 
 export function update(msg, state) {
-    switch (msg.tag) {
-        case 1: {
+    if (msg.tag === 1) {
+        if (msg.fields[0][1].tag === 1) {
+            const character = msg.fields[0][1].fields[0];
+            return [new Model(state.Count, state.CurrentPage, character, state.Characters, state.Game, state.Games), Cmd_none()];
+        }
+        else {
+            const id_2 = msg.fields[0][0] | 0;
             return [state, Cmd_OfAsyncWith_either((x) => {
                 Cmd_OfAsync_start(x);
-            }, getGames, void 0, (arg) => (new Msg(2, arg)), (arg_1) => (new Msg(3, arg_1)))];
+            }, getCharacter, id_2, (arg) => (new Msg(1, arg)), (arg_1) => (new Msg(5, arg_1)))];
         }
-        case 2: {
-            const games = msg.fields[0];
-            return [new Model(state.Count, state.CurrentPage, games), Cmd_none()];
+    }
+    else if (msg.tag === 2) {
+        if (msg.fields[0].tag === 1) {
+            const characters = msg.fields[0].fields[0];
+            return [new Model(state.Count, state.CurrentPage, state.Character, characters, state.Game, state.Games), Cmd_none()];
         }
-        case 3: {
-            const error = msg.fields[0];
-            return [state, Cmd_none()];
+        else {
+            return [state, Cmd_OfAsyncWith_either((x_1) => {
+                Cmd_OfAsync_start(x_1);
+            }, getCharacters, void 0, (arg_3) => (new Msg(2, arg_3)), (arg_4) => (new Msg(5, arg_4)))];
         }
-        default: {
-            const page = msg.fields[0];
-            if (page.tag === 2) {
-                return [new Model(state.Count, page, state.Games), Cmd_OfFunc_result(new Msg(1))];
+    }
+    else if (msg.tag === 3) {
+        if (msg.fields[0][1].tag === 1) {
+            const game = msg.fields[0][1].fields[0];
+            return [new Model(state.Count, state.CurrentPage, state.Character, state.Characters, game, state.Games), Cmd_none()];
+        }
+        else {
+            const id_3 = msg.fields[0][0] | 0;
+            return [state, Cmd_OfAsyncWith_either((x_2) => {
+                Cmd_OfAsync_start(x_2);
+            }, getGame, id_3, (arg_6) => (new Msg(3, arg_6)), (arg_7) => (new Msg(5, arg_7)))];
+        }
+    }
+    else if (msg.tag === 4) {
+        if (msg.fields[0].tag === 1) {
+            const games = msg.fields[0].fields[0];
+            return [new Model(state.Count, state.CurrentPage, state.Character, state.Characters, state.Game, games), Cmd_none()];
+        }
+        else {
+            return [state, Cmd_OfAsyncWith_either((x_3) => {
+                Cmd_OfAsync_start(x_3);
+            }, getGames, void 0, (arg_9) => (new Msg(4, arg_9)), (arg_10) => (new Msg(5, arg_10)))];
+        }
+    }
+    else if (msg.tag === 5) {
+        const error = msg.fields[0];
+        return [state, Cmd_none()];
+    }
+    else {
+        const page = msg.fields[0];
+        switch (page.tag) {
+            case 2: {
+                const id = page.fields[0] | 0;
+                return [new Model(state.Count, page, state.Character, state.Characters, state.Game, state.Games), singleton((dispatch) => {
+                    dispatch(new Msg(3, [id, new DataResult$1(0)]));
+                })];
             }
-            else {
-                return [new Model(state.Count, page, state.Games), Cmd_none()];
+            case 1: {
+                const id_1 = page.fields[0] | 0;
+                return [new Model(state.Count, page, state.Character, state.Characters, state.Game, state.Games), singleton((dispatch_1) => {
+                    dispatch_1(new Msg(1, [id_1, new DataResult$1(0)]));
+                })];
+            }
+            default: {
+                return [new Model(state.Count, page, state.Character, state.Characters, state.Game, state.Games), Cmd_none()];
             }
         }
     }
@@ -80,7 +113,7 @@ export function render(state, dispatch) {
     const matchValue = state.CurrentPage;
     switch (matchValue.tag) {
         case 1: {
-            return render_1(dispatch);
+            return render_1(state, dispatch);
         }
         case 15: {
             return render_2(dispatch);
@@ -116,7 +149,7 @@ export function render(state, dispatch) {
             return render_12(dispatch);
         }
         case 0: {
-            return render_13(dispatch);
+            return render_13(state, dispatch);
         }
         case 18: {
             return render_14(dispatch);
