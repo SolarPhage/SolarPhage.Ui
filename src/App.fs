@@ -5,42 +5,46 @@ open Elmish.React
 
 open App.Types
 open Fable.Core.JsInterop
-open Fable.Core
-open Fable.SimpleHttp
-open Fable.SimpleJson
 
 importAll "./scss/main.scss"
 
-[<Emit("process.env.APIURL")>]
-let apiUrl : string = jsNative
-let gamesUrl = apiUrl + "/game"
-
-let getGames () = 
-    async {
-        let! (statusCode, responseText) = Http.get gamesUrl
-
-        return Json.parseAs<Game list> responseText
-    }
-
-let init() = 
-    { Count = 0; CurrentPage = MainMenu; Games = [] }, Cmd.none
+let init() = { 
+    Count = 0
+    CurrentPage = MainMenu
+    Character = { Id = 0; Name = "test"; Level = 0; Enabled = false; Inventory = [] }
+    Characters = []
+    Game = { GameId = 5; MaxFloor = 5 }
+    Games = [] }, Cmd.batch [Cmd.ofMsg (LoadGames Loading); Cmd.ofMsg (LoadCharacters Loading)]
 
 let update (msg: Msg) (state: Model) = 
     match msg with
     | ChangePage page ->
         match page with
-        | ActiveGameMenu -> { state with CurrentPage = page }, Cmd.ofMsg LoadGames
+        | ActiveGameMenu id -> { state with CurrentPage = page }, Cmd.ofMsg (LoadGame (id, Loading))
+        | CharacterSelect id -> { state with CurrentPage = page }, Cmd.ofMsg (LoadCharacter (id, Loading))
         | _ -> { state with CurrentPage = page }, Cmd.none
-    | LoadGames ->
-        state, Cmd.OfAsync.either getGames () LoadGamesCompleted FailedToLoad
-    | LoadGamesCompleted games ->
+    | LoadCharacter (id, Loading) -> 
+        state, Cmd.OfAsync.either Infrastructure.Characters.getCharacter id LoadCharacter FailedToLoad
+    | LoadCharacter (_, Result character) ->
+        { state with Character = character }, Cmd.none
+    | LoadCharacters Loading ->
+        state, Cmd.OfAsync.either Infrastructure.Characters.getCharacters () LoadCharacters FailedToLoad
+    | LoadCharacters (Result characters) ->
+        { state with Characters = characters }, Cmd.none
+    | LoadGame (id, Loading) -> 
+        state, Cmd.OfAsync.either Infrastructure.Games.getGame id LoadGame FailedToLoad
+    | LoadGame (_, Result game) ->
+        { state with Game = game }, Cmd.none        
+    | LoadGames Loading ->
+        state, Cmd.OfAsync.either Infrastructure.Games.getGames () LoadGames FailedToLoad
+    | LoadGames (Result games) ->
         { state with Games = games }, Cmd.none
     | FailedToLoad error -> state, Cmd.none
 
 let render (state: Model) (dispatch: Msg -> unit) = 
     match state.CurrentPage with
-    | ActiveGameMenu -> ActiveGameMenu.render state dispatch
-    | CharacterSelect -> CharacterSelect.render dispatch
+    | ActiveGameMenu _ -> ActiveGameMenu.render state dispatch
+    | CharacterSelect _ -> CharacterSelect.render state dispatch
     | CombatMenu -> CombatMenu.render dispatch
     | CombatPhotocastsMenu -> CombatPhotocastsMenu.render dispatch
     | CombatPotionMenu -> CombatPotionMenu.render dispatch
@@ -52,7 +56,7 @@ let render (state: Model) (dispatch: Msg -> unit) =
     | GameInventoryPhotocastMenu -> GameInventoryPhotocastMenu.render dispatch
     | GameMenu -> GameMenu.render dispatch
     | GamePhotocastMenu -> GamePhotocastMenu.render dispatch
-    | MainMenu -> MainMenu.render dispatch
+    | MainMenu -> MainMenu.render state dispatch
     | PostCombatMenu -> PostCombatMenu.render dispatch
     | ShopBuyItem -> ShopBuyItem.render dispatch
     | ShopInventoryItem -> ShopInventoryItem.render dispatch

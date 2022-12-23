@@ -6,9 +6,11 @@ open Feliz
 
 let content (state : Model) =
     [
-        Html.ul [
-            for game in state.Games -> 
-                Html.li [ prop.text $"{ game.GameId } - { game.MaxFloor }" ]
+        Html.h1 [
+            prop.text state.Game.GameId
+        ]
+        Html.h1 [
+            prop.text state.Game.MaxFloor
         ]
     ]
 

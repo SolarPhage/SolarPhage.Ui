@@ -2,10 +2,28 @@ module App.Types
 
 type Game = { GameId : int; MaxFloor : int }
 
+type Item = {
+    Id: int
+    Name: string
+}
+
+type CharacterInventoryItem = {
+    Item : Item
+    Count : int
+}
+
+type Character = {
+    Id: int
+    Name: string
+    Level: int
+    Enabled: bool
+    Inventory: List<CharacterInventoryItem>
+}
+
 type Page = 
     | MainMenu
-    | CharacterSelect
-    | ActiveGameMenu
+    | CharacterSelect of int
+    | ActiveGameMenu of int
     | CreateCharacter
     | CreateGame
     | TownMenu
@@ -23,11 +41,22 @@ type Page =
     | CombatPhotocastsMenu
     | PostCombatMenu
 
+type DataResult<'t> = 
+    | Loading
+    | Result of 't
+
 type Msg = 
     | ChangePage of Page
-    | LoadGames
-    | LoadGamesCompleted of Game list
+    | LoadCharacter of (int * DataResult<Character>)
+    | LoadCharacters of DataResult<Character list>
+    | LoadGame of (int * DataResult<Game>)
+    | LoadGames of DataResult<Game list>
     | FailedToLoad of exn
 
-type Model = 
-    { Count : int; CurrentPage : Page; Games : Game list }
+type Model = { 
+    Count : int
+    CurrentPage : Page
+    Character : Character
+    Characters : Character list
+    Game : Game
+    Games : Game list }
