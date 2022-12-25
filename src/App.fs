@@ -16,13 +16,10 @@ let init() = {
     Game = { GameId = 5; MaxFloor = 5 }
     Games = [] }, Cmd.batch [Cmd.ofMsg (LoadGames Loading); Cmd.ofMsg (LoadCharacters Loading)]
 
-let update (msg: Msg) (state: Model) = 
+let update (msg: Msg) (state: State) = 
     match msg with
-    | ChangePage page ->
-        match page with
-        | ActiveGameMenu id -> { state with CurrentPage = page }, Cmd.ofMsg (LoadGame (id, Loading))
-        | CharacterSelect id -> { state with CurrentPage = page }, Cmd.ofMsg (LoadCharacter (id, Loading))
-        | _ -> { state with CurrentPage = page }, Cmd.none
+    | LoadPage (page, command) -> { state with CurrentPage = page }, Cmd.ofMsg command
+    | ChangePage page -> { state with CurrentPage = page }, Cmd.none
     | LoadCharacter (id, Loading) -> 
         state, Cmd.OfAsync.either Infrastructure.Characters.getCharacter id LoadCharacter FailedToLoad
     | LoadCharacter (_, Result character) ->
@@ -41,7 +38,7 @@ let update (msg: Msg) (state: Model) =
         { state with Games = games }, Cmd.none
     | FailedToLoad error -> state, Cmd.none
 
-let render (state: Model) (dispatch: Msg -> unit) = 
+let render (state: State) (dispatch: Msg -> unit) = 
     match state.CurrentPage with
     | ActiveGameMenu _ -> ActiveGameMenu.render state dispatch
     | CharacterSelect _ -> CharacterSelect.render state dispatch

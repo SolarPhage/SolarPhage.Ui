@@ -4,10 +4,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Types.fs" />
-    <Compile Include = "Infrastructure/Api.fs" />
-    <Compile Include = "Infrastructure/Characters.fs" />
-    <Compile Include = "Infrastructure/Games.fs" />
+    <Compile Include="Infrastructure/Api.fs" />
+    <Compile Include="Infrastructure/Characters.fs" />
+    <Compile Include="Infrastructure/Games.fs" />
     <Compile Include="Views/Templates/SharedTemplate.fs" />
+    <Compile Include="Views/Templates/TableTemplate.fs" />
     <Compile Include="Views/ActiveGameMenu.fs" />
     <Compile Include="Views/CharacterSelect.fs" />
     <Compile Include="Views/CombatMenu.fs" />

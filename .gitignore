@@ -1,6 +1,7 @@
 # Fable generated files
 .fable
 *.fs.js
+App.fs.js
 bundle.js
 temp/**
 
