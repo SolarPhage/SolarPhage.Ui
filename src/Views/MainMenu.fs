@@ -2,83 +2,75 @@ module MainMenu
 
 open App.Types
 open SharedTemplate
+open TableTemplate
 open Feliz
 
-let content (state : Model) (dispatch: Msg -> unit) = 
+let createColumnsDiv (children : seq<ReactElement>) = 
+    Html.div [
+        prop.className "columns"
+        prop.children children
+    ]
+
+let createHeaderColumnDiv (title : string) = 
+    Html.div [
+        prop.className "column is-half has-text-centered" 
+        prop.children [
+            Html.h2 title
+        ]
+    ]
+
+let createGamesCells (game : Game) (dispatch: Msg -> unit) : seq<ReactElement> = 
     [
-        Html.div [
-            prop.className "columns"
-            prop.children [
-                Html.div [
-                    prop.className "column is-half has-text-centered"
-                    prop.children [
-                        Html.h2 "Games"
-                    ]
-                ]
-                Html.div [
-                    prop.className "column is-half has-text-centered"
-                    prop.children [
-                        Html.h2 "Characters"
-                    ]
-                ]
+        Html.tableCell [ 
+            Html.a [
+                prop.text $"{game.GameId}"
+                prop.onClick (fun _ -> dispatch <| LoadPage (ActiveGameMenu, LoadGame(game.GameId, Loading)))
             ]
         ]
+        Html.tableCell [ prop.text $"{game.MaxFloor}"]
+    ]
 
-        Html.div [
-            prop.className "columns"
-            prop.children [
-                Html.div [
-                    prop.className "column is-half"
-                    prop.children [
-                        Html.table [
-                            prop.className "table is-hoverable is-fullwidth"
-                            prop.children [
-                                Html.tableRow [
-                                    Html.tableHeader [ prop.text "Game ID"]
-                                    Html.tableHeader [ prop.text "Max Floor"]
-                                ]
-                                Html.tableBody [
-                                    for game in state.Games ->
-                                        Html.tableRow [
-                                            Html.tableCell [ 
-                                                Html.a [
-                                                    prop.text $"{game.GameId}"
-                                                    prop.onClick (fun _ -> dispatch <| ChangePage (ActiveGameMenu game.GameId))
-                                                ]
-                                            ]
-                                            Html.tableCell [ prop.text $"{game.MaxFloor}"]
-                                        ]
-                                ]
-                            ]
-                        ]
-                    ]
+let createCharactersCells (character : Character) (dispatch: Msg -> unit) : seq<ReactElement> = 
+    [
+        Html.tableCell [ 
+            Html.a [
+                prop.text $"{character.Name}"
+                prop.onClick (fun _ -> dispatch <| LoadPage (CharacterSelect, LoadCharacter(character.Id, Loading)))
+            ]
+        ]
+        Html.tableCell [ prop.text $"{character.Level}"]
+    ]
+
+let createTableColumnDiv (children : seq<ReactElement>) = 
+    Html.div [
+        prop.className "column is-half" 
+        prop.children children
+    ]
+
+let content (state : State) (dispatch: Msg -> unit) = 
+    [
+        createColumnsDiv [
+            createHeaderColumnDiv "Games"
+            createHeaderColumnDiv "Characters"
+        ]
+
+        createColumnsDiv [
+            createTableColumnDiv [
+                createTable  [
+                    createTableHeaders ["Game ID"; "Max Floor"]
+                    createTableBody (
+                        state.Games
+                        |> Seq.map (fun x -> createGameTableRow <| createGamesCells x dispatch))
                 ]
-                Html.div [
-                    prop.className "column is-half"
-                    prop.children [
-                        Html.table [
-                            prop.className "table is-hoverable is-fullwidth"
-                            prop.children [
-                                Html.tableRow [
-                                    Html.tableHeader [ prop.text "Name"]
-                                    Html.tableHeader [ prop.text "Level"]
-                                ]
-                                Html.tableBody [
-                                    for character in state.Characters ->
-                                        Html.tableRow [
-                                            Html.tableCell [ 
-                                                Html.a [
-                                                    prop.text $"{character.Name}"
-                                                    prop.onClick (fun _ -> dispatch <| ChangePage (CharacterSelect character.Id))
-                                                ]
-                                            ]
-                                            Html.tableCell [ prop.text $"{character.Level}"]
-                                        ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]                
+            ]
+
+            createTableColumnDiv [
+                createTable [
+                    createTableHeaders ["Name"; "Level"]
+                    createTableBody (
+                        state.Characters
+                        |> Seq.map (fun x -> createGameTableRow <| createCharactersCells x dispatch))
+                ]
             ]
         ]
     ]
@@ -98,5 +90,5 @@ let footer (dispatch: Msg -> unit) =
         ]
     ]
 
-let render (state : Model) (dispatch: Msg -> unit) = 
+let render (state : State) (dispatch: Msg -> unit) = 
     renderMainContentAndFooter (content state dispatch) (footer dispatch)

@@ -22,8 +22,8 @@ type Character = {
 
 type Page = 
     | MainMenu
-    | CharacterSelect of int
-    | ActiveGameMenu of int
+    | CharacterSelect
+    | ActiveGameMenu
     | CreateCharacter
     | CreateGame
     | TownMenu
@@ -47,13 +47,14 @@ type DataResult<'t> =
 
 type Msg = 
     | ChangePage of Page
+    | LoadPage of (Page * Msg)
     | LoadCharacter of (int * DataResult<Character>)
     | LoadCharacters of DataResult<Character list>
     | LoadGame of (int * DataResult<Game>)
     | LoadGames of DataResult<Game list>
     | FailedToLoad of exn
 
-type Model = { 
+type State = { 
     Count : int
     CurrentPage : Page
     Character : Character
