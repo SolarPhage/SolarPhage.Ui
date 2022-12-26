@@ -3,8 +3,9 @@ import { Msg, DataResult$1, State, Game, Character, Page } from "./Types.fs.js";
 import { ofArray, singleton, empty } from "./fable_modules/fable-library.3.7.20/List.js";
 import { Cmd_none, Cmd_batch } from "./fable_modules/Fable.Elmish.4.0.0/cmd.fs.js";
 import { Cmd_OfAsync_start, Cmd_OfAsyncWith_either } from "./fable_modules/Fable.Elmish.4.0.0/./cmd.fs.js";
-import { getCharacters, getCharacter } from "./Infrastructure/Characters.fs.js";
-import { getGames, getGame } from "./Infrastructure/Games.fs.js";
+import { getCharacters, getCharacter } from "./Infrastructure/Character.fs.js";
+import { getGames, getGame } from "./Infrastructure/Game.fs.js";
+import { getShopItems } from "./Infrastructure/Shop.fs.js";
 import { render as render_1 } from "./Views/CharacterSelect.fs.js";
 import { render as render_2 } from "./Views/CombatMenu.fs.js";
 import { render as render_3 } from "./Views/CombatPhotocastsMenu.fs.js";
@@ -29,7 +30,7 @@ import { Program_withReactSynchronous } from "./fable_modules/Fable.Elmish.React
 
 
 export function init() {
-    return [new State(0, new Page(0), new Character(0, "test", 0, false, empty()), empty(), new Game(5, 5), empty()), Cmd_batch(ofArray([singleton((dispatch) => {
+    return [new State(0, new Page(0), new Character(0, "test", 0, false, empty()), empty(), new Game(5, 5), empty(), empty()), Cmd_batch(ofArray([singleton((dispatch) => {
         dispatch(new Msg(5, new DataResult$1(0)));
     }), singleton((dispatch_1) => {
         dispatch_1(new Msg(3, new DataResult$1(0)));
@@ -39,62 +40,73 @@ export function init() {
 export function update(msg, state) {
     if (msg.tag === 0) {
         const page_1 = msg.fields[0];
-        return [new State(state.Count, page_1, state.Character, state.Characters, state.Game, state.Games), Cmd_none()];
+        return [new State(state.Count, page_1, state.Character, state.Characters, state.Game, state.Games, state.ShopItems), Cmd_none()];
     }
     else if (msg.tag === 2) {
         if (msg.fields[0][1].tag === 1) {
             const character = msg.fields[0][1].fields[0];
-            return [new State(state.Count, state.CurrentPage, character, state.Characters, state.Game, state.Games), Cmd_none()];
+            return [new State(state.Count, state.CurrentPage, character, state.Characters, state.Game, state.Games, state.ShopItems), Cmd_none()];
         }
         else {
             const id = msg.fields[0][0] | 0;
             return [state, Cmd_OfAsyncWith_either((x) => {
                 Cmd_OfAsync_start(x);
-            }, getCharacter, id, (arg) => (new Msg(2, arg)), (arg_1) => (new Msg(6, arg_1)))];
+            }, getCharacter, id, (arg) => (new Msg(2, arg)), (arg_1) => (new Msg(7, arg_1)))];
         }
     }
     else if (msg.tag === 3) {
         if (msg.fields[0].tag === 1) {
             const characters = msg.fields[0].fields[0];
-            return [new State(state.Count, state.CurrentPage, state.Character, characters, state.Game, state.Games), Cmd_none()];
+            return [new State(state.Count, state.CurrentPage, state.Character, characters, state.Game, state.Games, state.ShopItems), Cmd_none()];
         }
         else {
             return [state, Cmd_OfAsyncWith_either((x_1) => {
                 Cmd_OfAsync_start(x_1);
-            }, getCharacters, void 0, (arg_3) => (new Msg(3, arg_3)), (arg_4) => (new Msg(6, arg_4)))];
+            }, getCharacters, void 0, (arg_3) => (new Msg(3, arg_3)), (arg_4) => (new Msg(7, arg_4)))];
         }
     }
     else if (msg.tag === 4) {
         if (msg.fields[0][1].tag === 1) {
             const game = msg.fields[0][1].fields[0];
-            return [new State(state.Count, state.CurrentPage, state.Character, state.Characters, game, state.Games), Cmd_none()];
+            return [new State(state.Count, state.CurrentPage, state.Character, state.Characters, game, state.Games, state.ShopItems), Cmd_none()];
         }
         else {
             const id_1 = msg.fields[0][0] | 0;
             return [state, Cmd_OfAsyncWith_either((x_2) => {
                 Cmd_OfAsync_start(x_2);
-            }, getGame, id_1, (arg_6) => (new Msg(4, arg_6)), (arg_7) => (new Msg(6, arg_7)))];
+            }, getGame, id_1, (arg_6) => (new Msg(4, arg_6)), (arg_7) => (new Msg(7, arg_7)))];
         }
     }
     else if (msg.tag === 5) {
         if (msg.fields[0].tag === 1) {
             const games = msg.fields[0].fields[0];
-            return [new State(state.Count, state.CurrentPage, state.Character, state.Characters, state.Game, games), Cmd_none()];
+            return [new State(state.Count, state.CurrentPage, state.Character, state.Characters, state.Game, games, state.ShopItems), Cmd_none()];
         }
         else {
             return [state, Cmd_OfAsyncWith_either((x_3) => {
                 Cmd_OfAsync_start(x_3);
-            }, getGames, void 0, (arg_9) => (new Msg(5, arg_9)), (arg_10) => (new Msg(6, arg_10)))];
+            }, getGames, void 0, (arg_9) => (new Msg(5, arg_9)), (arg_10) => (new Msg(7, arg_10)))];
         }
     }
     else if (msg.tag === 6) {
+        if (msg.fields[0].tag === 1) {
+            const items = msg.fields[0].fields[0];
+            return [new State(state.Count, state.CurrentPage, state.Character, state.Characters, state.Game, state.Games, items), Cmd_none()];
+        }
+        else {
+            return [state, Cmd_OfAsyncWith_either((x_4) => {
+                Cmd_OfAsync_start(x_4);
+            }, getShopItems, void 0, (arg_12) => (new Msg(6, arg_12)), (arg_13) => (new Msg(7, arg_13)))];
+        }
+    }
+    else if (msg.tag === 7) {
         const error = msg.fields[0];
         return [state, Cmd_none()];
     }
     else {
         const command = msg.fields[0][1];
         const page = msg.fields[0][0];
-        return [new State(state.Count, page, state.Character, state.Characters, state.Game, state.Games), singleton((dispatch) => {
+        return [new State(state.Count, page, state.Character, state.Characters, state.Game, state.Games, state.ShopItems), singleton((dispatch) => {
             dispatch(command);
         })];
     }
@@ -152,7 +164,7 @@ export function render(state, dispatch) {
             return render_16(dispatch);
         }
         case 6: {
-            return render_17(dispatch);
+            return render_17(state, dispatch);
         }
         case 5: {
             return render_18(dispatch);

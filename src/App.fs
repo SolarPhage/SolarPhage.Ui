@@ -14,28 +14,33 @@ let init() = {
     Character = { Id = 0; Name = "test"; Level = 0; Enabled = false; Inventory = [] }
     Characters = []
     Game = { GameId = 5; MaxFloor = 5 }
-    Games = [] }, Cmd.batch [Cmd.ofMsg (LoadGames Loading); Cmd.ofMsg (LoadCharacters Loading)]
+    Games = [] 
+    ShopItems = []}, Cmd.batch [Cmd.ofMsg (LoadGames Loading); Cmd.ofMsg (LoadCharacters Loading)]
 
 let update (msg: Msg) (state: State) = 
     match msg with
     | LoadPage (page, command) -> { state with CurrentPage = page }, Cmd.ofMsg command
     | ChangePage page -> { state with CurrentPage = page }, Cmd.none
     | LoadCharacter (id, Loading) -> 
-        state, Cmd.OfAsync.either Infrastructure.Characters.getCharacter id LoadCharacter FailedToLoad
+        state, Cmd.OfAsync.either Infrastructure.Character.getCharacter id LoadCharacter FailedToLoad
     | LoadCharacter (_, Result character) ->
         { state with Character = character }, Cmd.none
     | LoadCharacters Loading ->
-        state, Cmd.OfAsync.either Infrastructure.Characters.getCharacters () LoadCharacters FailedToLoad
+        state, Cmd.OfAsync.either Infrastructure.Character.getCharacters () LoadCharacters FailedToLoad
     | LoadCharacters (Result characters) ->
         { state with Characters = characters }, Cmd.none
     | LoadGame (id, Loading) -> 
-        state, Cmd.OfAsync.either Infrastructure.Games.getGame id LoadGame FailedToLoad
+        state, Cmd.OfAsync.either Infrastructure.Game.getGame id LoadGame FailedToLoad
     | LoadGame (_, Result game) ->
         { state with Game = game }, Cmd.none        
     | LoadGames Loading ->
-        state, Cmd.OfAsync.either Infrastructure.Games.getGames () LoadGames FailedToLoad
+        state, Cmd.OfAsync.either Infrastructure.Game.getGames () LoadGames FailedToLoad
     | LoadGames (Result games) ->
         { state with Games = games }, Cmd.none
+    | LoadShop Loading ->
+        state, Cmd.OfAsync.either Infrastructure.Shop.getShopItems () LoadShop FailedToLoad
+    | LoadShop (Result items) ->
+        { state with ShopItems = items }, Cmd.none
     | FailedToLoad error -> state, Cmd.none
 
 let render (state: State) (dispatch: Msg -> unit) = 
@@ -57,7 +62,7 @@ let render (state: State) (dispatch: Msg -> unit) =
     | PostCombatMenu -> PostCombatMenu.render dispatch
     | ShopBuyItem -> ShopBuyItem.render dispatch
     | ShopInventoryItem -> ShopInventoryItem.render dispatch
-    | ShopMenu -> ShopMenu.render dispatch
+    | ShopMenu -> ShopMenu.render state dispatch
     | TownMenu -> TownMenu.render dispatch
 
 Program.mkProgram init update render

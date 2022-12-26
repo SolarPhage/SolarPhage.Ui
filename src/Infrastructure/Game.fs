@@ -1,4 +1,4 @@
-module Infrastructure.Games
+module Infrastructure.Game
 
 open Fable.SimpleHttp
 open Fable.SimpleJson

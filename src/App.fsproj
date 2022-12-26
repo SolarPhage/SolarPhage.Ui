@@ -5,8 +5,13 @@
   <ItemGroup>
     <Compile Include="Types.fs" />
     <Compile Include="Infrastructure/Api.fs" />
-    <Compile Include="Infrastructure/Characters.fs" />
-    <Compile Include="Infrastructure/Games.fs" />
+    <Compile Include="Infrastructure/Character.fs" />
+    <Compile Include="Infrastructure/Combat.fs" />
+    <Compile Include="Infrastructure/Dungeon.fs" />
+    <Compile Include="Infrastructure/Game.fs" />
+    <Compile Include="Infrastructure/Inventory.fs" />
+    <Compile Include="Infrastructure/Item.fs" />
+    <Compile Include="Infrastructure/Shop.fs" />
     <Compile Include="Views/Templates/SharedTemplate.fs" />
     <Compile Include="Views/Templates/TableTemplate.fs" />
     <Compile Include="Views/ActiveGameMenu.fs" />

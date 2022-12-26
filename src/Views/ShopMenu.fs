@@ -4,10 +4,15 @@ open App.Types
 open SharedTemplate
 open Feliz
 
-let content = 
+let content (state : State) = 
     [
         Html.div [
-            prop.text "test"
+            Html.ul [
+                for i in state.ShopItems do
+                    Html.li [
+                        prop.text $"{i.ItemInfo.Name}"
+                    ]
+            ]
         ]
     ]
 
@@ -30,6 +35,6 @@ let footer (dispatch: Msg -> unit) =
         ]
     ]
 
-let render (dispatch: Msg -> unit) = 
-    renderMainContentAndFooter content (footer dispatch)
+let render (state : State) (dispatch: Msg -> unit) = 
+    renderMainContentAndFooter (content state) (footer dispatch)
 
