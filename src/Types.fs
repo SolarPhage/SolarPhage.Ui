@@ -17,7 +17,21 @@ type Character = {
     Name: string
     Level: int
     Enabled: bool
-    Inventory: List<CharacterInventoryItem>
+    Inventory: CharacterInventoryItem list
+}
+
+type CombatState = { CombatId : int; PlayerHp : int }
+type DungeonInfo = { Level : int }
+type InventoryUpdate = {
+    CharacterId : int
+    ItemId : int
+    Amount : int
+    Cost : int
+}
+type ShopItem = {
+    ItemInfo : Item
+    AmountForSale : int
+    CostPerItem : int
 }
 
 type Page = 
@@ -52,6 +66,7 @@ type Msg =
     | LoadCharacters of DataResult<Character list>
     | LoadGame of (int * DataResult<Game>)
     | LoadGames of DataResult<Game list>
+    | LoadShop of (DataResult<ShopItem list>)
     | FailedToLoad of exn
 
 type State = { 
@@ -60,4 +75,5 @@ type State = {
     Character : Character
     Characters : Character list
     Game : Game
-    Games : Game list }
+    Games : Game list 
+    ShopItems : ShopItem list}

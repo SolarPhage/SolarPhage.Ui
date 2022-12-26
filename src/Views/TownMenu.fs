@@ -15,7 +15,7 @@ let footer (dispatch: Msg -> unit) =
     [
         Html.button [
             prop.className[ "button" ]
-            prop.onClick (fun _ -> dispatch <| ChangePage ShopMenu)
+            prop.onClick (fun _ -> dispatch <| LoadPage(ShopMenu, LoadShop Loading))
             prop.text "Shop"
         ]
 

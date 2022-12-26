@@ -1,4 +1,4 @@
-module Infrastructure.Characters
+module Infrastructure.Character
 
 open Fable.SimpleHttp
 open Fable.SimpleJson
