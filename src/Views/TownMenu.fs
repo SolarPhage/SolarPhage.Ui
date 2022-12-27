@@ -11,7 +11,7 @@ let content =
         ]
     ]
 
-let footer (dispatch: Msg -> unit) = 
+let footer (state : State) (dispatch: Msg -> unit) = 
     [
         Html.button [
             prop.className[ "button" ]
@@ -21,7 +21,7 @@ let footer (dispatch: Msg -> unit) =
 
         Html.button [
             prop.className[ "button" ]
-            prop.onClick (fun _ -> dispatch <| ChangePage DungeonMenu)
+            prop.onClick (fun _ -> dispatch <| LoadPage(DungeonMenu, LoadDungeon(state.Dungeon.DungeonId, Loading)))
             prop.text "Dungeon"
         ]
 
@@ -32,5 +32,5 @@ let footer (dispatch: Msg -> unit) =
         ]
     ]
 
-let render (dispatch: Msg -> unit) = 
-    renderMainContentAndFooter content (footer dispatch)
+let render (state : State) (dispatch: Msg -> unit) = 
+    renderMainContentAndFooter content (footer state dispatch)

@@ -13,6 +13,7 @@ let init() = {
     CurrentPage = MainMenu
     Character = { Id = 0; Name = "test"; Level = 0; Enabled = false; Inventory = [] }
     Characters = []
+    Dungeon = { DungeonId = 5; Level = 1}
     Game = { GameId = 5; MaxFloor = 5 }
     Games = [] 
     ShopItems = []}, Cmd.batch [Cmd.ofMsg (LoadGames Loading); Cmd.ofMsg (LoadCharacters Loading)]
@@ -29,6 +30,10 @@ let update (msg: Msg) (state: State) =
         state, Cmd.OfAsync.either Infrastructure.Character.getCharacters () LoadCharacters FailedToLoad
     | LoadCharacters (Result characters) ->
         { state with Characters = characters }, Cmd.none
+    | LoadDungeon (id, Loading) -> 
+        state, Cmd.OfAsync.either Infrastructure.Dungeon.getDungeon id LoadDungeon FailedToLoad
+    | LoadDungeon (_, Result dungeon) ->
+        { state with Dungeon = dungeon }, Cmd.none  
     | LoadGame (id, Loading) -> 
         state, Cmd.OfAsync.either Infrastructure.Game.getGame id LoadGame FailedToLoad
     | LoadGame (_, Result game) ->
@@ -52,7 +57,7 @@ let render (state: State) (dispatch: Msg -> unit) =
     | CombatPotionMenu -> CombatPotionMenu.render dispatch
     | CreateCharacter -> CreateCharacter.render dispatch
     | CreateGame -> CreateGame.render dispatch
-    | DungeonMenu -> DungeonMenu.render dispatch
+    | DungeonMenu -> DungeonMenu.render state dispatch
     | GameCharacterMenu -> GameCharacterMenu.render dispatch
     | GameInventoryMenu -> GameInventoryMenu.render dispatch
     | GameInventoryPhotocastMenu -> GameInventoryPhotocastMenu.render dispatch
@@ -63,7 +68,7 @@ let render (state: State) (dispatch: Msg -> unit) =
     | ShopBuyItem -> ShopBuyItem.render dispatch
     | ShopInventoryItem -> ShopInventoryItem.render dispatch
     | ShopMenu -> ShopMenu.render state dispatch
-    | TownMenu -> TownMenu.render dispatch
+    | TownMenu -> TownMenu.render state dispatch
 
 Program.mkProgram init update render
 |> Program.withReactSynchronous "elmish-app"

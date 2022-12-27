@@ -21,7 +21,7 @@ type Character = {
 }
 
 type CombatState = { CombatId : int; PlayerHp : int }
-type DungeonInfo = { Level : int }
+type DungeonInfo = { DungeonId: int; Level : int }
 type InventoryUpdate = {
     CharacterId : int
     ItemId : int
@@ -64,6 +64,7 @@ type Msg =
     | LoadPage of (Page * Msg)
     | LoadCharacter of (int * DataResult<Character>)
     | LoadCharacters of DataResult<Character list>
+    | LoadDungeon of (int * DataResult<DungeonInfo>)
     | LoadGame of (int * DataResult<Game>)
     | LoadGames of DataResult<Game list>
     | LoadShop of (DataResult<ShopItem list>)
@@ -74,6 +75,7 @@ type State = {
     CurrentPage : Page
     Character : Character
     Characters : Character list
+    Dungeon : DungeonInfo
     Game : Game
     Games : Game list 
     ShopItems : ShopItem list}
