@@ -4,10 +4,13 @@ open App.Types
 open SharedTemplate
 open Feliz
 
-let content = 
+let content (state : State) = 
     [
         Html.div [
-            prop.text "test"
+            Html.ul [
+                Html.li [ prop.text state.Dungeon.DungeonId ]
+                Html.li [ prop.text state.Dungeon.Level ]
+            ]
         ]
     ]
 
@@ -37,5 +40,5 @@ let footer (dispatch: Msg -> unit) =
         ]
     ]
 
-let render (dispatch: Msg -> unit) = 
-    renderMainContentAndFooter content (footer dispatch)
+let render (state : State) (dispatch: Msg -> unit) = 
+    renderMainContentAndFooter (content state) (footer dispatch)
