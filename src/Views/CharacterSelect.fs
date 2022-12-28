@@ -7,10 +7,10 @@ open Feliz
 let content (state : State) = 
     [
         Html.h1 [
-            prop.text state.Character.Name
+            prop.text state.Character.CharacterId
         ]
         Html.h1 [
-            prop.text state.Character.Inventory.[0].Item.Name
+            prop.text state.Character.UserId
         ]
     ]
 

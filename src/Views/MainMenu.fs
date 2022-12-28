@@ -34,11 +34,11 @@ let createCharactersCells (character : Character) (dispatch: Msg -> unit) : seq<
     [
         Html.tableCell [ 
             Html.a [
-                prop.text $"{character.Name}"
-                prop.onClick (fun _ -> dispatch <| LoadPage (CharacterSelect, LoadCharacter(character.Id, Loading)))
+                prop.text $"{character.CharacterId}"
+                prop.onClick (fun _ -> dispatch <| LoadPage (CharacterSelect, LoadCharacter(character.UserId, Loading)))
             ]
         ]
-        Html.tableCell [ prop.text $"{character.Level}"]
+        Html.tableCell [ prop.text $"{character.UserId}"]
     ]
 
 let createTableColumnDiv (children : seq<ReactElement>) = 

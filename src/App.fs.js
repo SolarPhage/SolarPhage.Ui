@@ -31,7 +31,7 @@ import { Program_withReactSynchronous } from "./fable_modules/Fable.Elmish.React
 
 
 export function init() {
-    return [new State(0, new Page(0), new Character(0, "test", 0, false, empty()), empty(), new DungeonInfo(5, 1), new Game(5, 5), empty(), empty()), Cmd_batch(ofArray([singleton((dispatch) => {
+    return [new State(0, new Page(0), new Character(0, ""), empty(), new DungeonInfo(5, 1), new Game(5, 5), empty(), empty()), Cmd_batch(ofArray([singleton((dispatch) => {
         dispatch(new Msg(6, new DataResult$1(0)));
     }), singleton((dispatch_1) => {
         dispatch_1(new Msg(3, new DataResult$1(0)));
@@ -49,7 +49,7 @@ export function update(msg, state) {
             return [new State(state.Count, state.CurrentPage, character, state.Characters, state.Dungeon, state.Game, state.Games, state.ShopItems), Cmd_none()];
         }
         else {
-            const id = msg.fields[0][0] | 0;
+            const id = msg.fields[0][0];
             return [state, Cmd_OfAsyncWith_either((x) => {
                 Cmd_OfAsync_start(x);
             }, getCharacter, id, (arg) => (new Msg(2, arg)), (arg_1) => (new Msg(8, arg_1)))];

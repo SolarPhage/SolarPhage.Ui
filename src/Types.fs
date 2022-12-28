@@ -13,11 +13,12 @@ type CharacterInventoryItem = {
 }
 
 type Character = {
-    Id: int
-    Name: string
-    Level: int
-    Enabled: bool
-    Inventory: CharacterInventoryItem list
+    CharacterId: int
+    UserId: string
+    // Name: string
+    // Level: int
+    // Enabled: bool
+    // Inventory: CharacterInventoryItem list
 }
 
 type CombatState = { CombatId : int; PlayerHp : int }
@@ -62,7 +63,7 @@ type DataResult<'t> =
 type Msg = 
     | ChangePage of Page
     | LoadPage of (Page * Msg)
-    | LoadCharacter of (int * DataResult<Character>)
+    | LoadCharacter of (string * DataResult<Character>)
     | LoadCharacters of DataResult<Character list>
     | LoadDungeon of (int * DataResult<DungeonInfo>)
     | LoadGame of (int * DataResult<Game>)
