@@ -11,7 +11,7 @@ importAll "./scss/main.scss"
 let init() = { 
     Count = 0
     CurrentPage = MainMenu
-    Character = { Id = 0; Name = "test"; Level = 0; Enabled = false; Inventory = [] }
+    Character = { CharacterId = 0; UserId = ""; }
     Characters = []
     Dungeon = { DungeonId = 5; Level = 1}
     Game = { GameId = 5; MaxFloor = 5 }
