@@ -25,3 +25,10 @@ let getCharacter (characterId : string) =
         
         return (characterId, Result character)
     }
+
+let createCharacter (character : Character) = 
+    async {
+        let! (statusCode, responseText) = Http.post charactersUrl <| Json.serialize character
+
+        return (statusCode, Result responseText)
+    }

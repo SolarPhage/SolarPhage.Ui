@@ -63,8 +63,12 @@ type DataResult<'t> =
 type Msg = 
     | ChangePage of Page
     | LoadPage of (Page * Msg)
+    | ClearCharacter
     | LoadCharacter of (string * DataResult<Character>)
     | LoadCharacters of DataResult<Character list>
+    | SubmitCharacter
+    | SubmitCharacterResponse of (int * DataResult<string>)
+    | UpdateCharacter of Character
     | LoadDungeon of (int * DataResult<DungeonInfo>)
     | LoadGame of (int * DataResult<Game>)
     | LoadGames of DataResult<Game list>

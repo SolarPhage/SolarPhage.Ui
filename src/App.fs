@@ -17,11 +17,12 @@ let init() = {
     Game = { GameId = 5; MaxFloor = 5 }
     Games = [] 
     ShopItems = []}, Cmd.batch [Cmd.ofMsg (LoadGames Loading); Cmd.ofMsg (LoadCharacters Loading)]
-
+    
 let update (msg: Msg) (state: State) = 
     match msg with
     | LoadPage (page, command) -> { state with CurrentPage = page }, Cmd.ofMsg command
     | ChangePage page -> { state with CurrentPage = page }, Cmd.none
+    | ClearCharacter -> { state with Character = { UserId = ""; CharacterId = 0 }}, Cmd.none
     | LoadCharacter (id, Loading) -> 
         state, Cmd.OfAsync.either Infrastructure.Character.getCharacter id LoadCharacter FailedToLoad
     | LoadCharacter (_, Result character) ->
@@ -30,6 +31,12 @@ let update (msg: Msg) (state: State) =
         state, Cmd.OfAsync.either Infrastructure.Character.getCharacters () LoadCharacters FailedToLoad
     | LoadCharacters (Result characters) ->
         { state with Characters = characters }, Cmd.none
+    | UpdateCharacter character ->
+        { state with Character = character }, Cmd.none
+    | SubmitCharacter -> 
+        state, Cmd.OfAsync.either Infrastructure.Character.createCharacter state.Character SubmitCharacterResponse FailedToLoad
+    | SubmitCharacterResponse _ ->
+        state, Cmd.ofMsg ClearCharacter
     | LoadDungeon (id, Loading) -> 
         state, Cmd.OfAsync.either Infrastructure.Dungeon.getDungeon id LoadDungeon FailedToLoad
     | LoadDungeon (_, Result dungeon) ->
@@ -55,7 +62,7 @@ let render (state: State) (dispatch: Msg -> unit) =
     | CombatMenu -> CombatMenu.render dispatch
     | CombatPhotocastsMenu -> CombatPhotocastsMenu.render dispatch
     | CombatPotionMenu -> CombatPotionMenu.render dispatch
-    | CreateCharacter -> CreateCharacter.render dispatch
+    | CreateCharacter -> CreateCharacter.render state dispatch
     | CreateGame -> CreateGame.render dispatch
     | DungeonMenu -> DungeonMenu.render state dispatch
     | GameCharacterMenu -> GameCharacterMenu.render dispatch

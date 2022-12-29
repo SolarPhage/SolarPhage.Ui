@@ -85,7 +85,7 @@ let footer (dispatch: Msg -> unit) =
 
         Html.button [
             prop.className[ "button" ]
-            prop.onClick (fun _ -> dispatch <| ChangePage CreateCharacter)
+            prop.onClick (fun _ -> dispatch <| ChangePage CreateGame)
             prop.text "Create Game"
         ]
     ]
