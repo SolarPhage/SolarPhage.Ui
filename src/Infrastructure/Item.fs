@@ -12,5 +12,5 @@ let getItem (itemId : int) =
 
         let itemInfo = Json.parseAs<Item> responseText
 
-        return (itemId, Result itemInfo)
+        return (itemId, Shared.Result itemInfo)
     }

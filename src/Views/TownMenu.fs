@@ -15,13 +15,13 @@ let footer (state : State) (dispatch: Msg -> unit) =
     [
         Html.button [
             prop.className[ "button" ]
-            prop.onClick (fun _ -> dispatch <| LoadPage(ShopMenu, LoadShop Loading))
+            prop.onClick (fun _ -> dispatch <| LoadPage(ShopMenu, LoadShop Shared.Loading))
             prop.text "Shop"
         ]
 
         Html.button [
             prop.className[ "button" ]
-            prop.onClick (fun _ -> dispatch <| LoadPage(DungeonMenu, LoadDungeon(state.Dungeon.DungeonId, Loading)))
+            prop.onClick (fun _ -> dispatch <| LoadPage(DungeonMenu, LoadDungeon(state.Dungeon.DungeonId, Shared.Loading)))
             prop.text "Dungeon"
         ]
 

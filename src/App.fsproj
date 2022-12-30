@@ -3,7 +3,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Types.fs" />
+    <Compile Include="Types/SharedTypes.fs" />
+    <Compile Include="Types/CharacterTypes.fs" />
+    <Compile Include="Types/GameTypes.fs" />
+    <Compile Include="Types/AppTypes.fs" />
     <Compile Include="Infrastructure/Api.fs" />
     <Compile Include="Infrastructure/Character.fs" />
     <Compile Include="Infrastructure/Combat.fs" />
@@ -33,6 +36,8 @@
     <Compile Include="Views/ShopInventoryItem.fs" />
     <Compile Include="Views/ShopMenu.fs" />
     <Compile Include="Views/TownMenu.fs" />
+    <Compile Include="Modules/Character.fs" />
+    <Compile Include="Modules/Game.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>

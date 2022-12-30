@@ -14,7 +14,7 @@ let postDungeon dungeon =
 
         let dungeonInfo = Json.parseAs<DungeonInfo> responseText
 
-        return (statusCode, Result dungeonInfo)
+        return (statusCode, Shared.Result dungeonInfo)
     }
 
 let getDungeon (dungeonId : int) = 
@@ -23,5 +23,5 @@ let getDungeon (dungeonId : int) =
 
         let dungeonInfo = Json.parseAs<DungeonInfo> responseText
 
-        return (dungeonId, Result dungeonInfo)
+        return (dungeonId, Shared.Result dungeonInfo)
     }

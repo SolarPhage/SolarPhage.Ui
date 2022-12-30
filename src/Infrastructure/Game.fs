@@ -11,16 +11,16 @@ let getGames () =
     async {
         let! (statusCode, responseText) = Http.get gamesUrl
 
-        let games = Json.parseAs<Game list> responseText
+        let games = Json.parseAs<Game.Game list> responseText
 
-        return Result games
+        return Shared.Result games
     }
 
 let getGame gameId = 
     async {
         let! (statusCode, responseText) = Http.get <| gameUrl gameId
 
-        let game = Json.parseAs<Game> responseText
+        let game = Json.parseAs<Game.Game> responseText
 
-        return (gameId, Result game)
+        return (gameId, Shared.Result game)
     }

@@ -1,7 +1,5 @@
 module App.Types
 
-type Game = { GameId : int; MaxFloor : int }
-
 type Item = {
     Id: int
     Name: string
@@ -10,15 +8,6 @@ type Item = {
 type CharacterInventoryItem = {
     Item : Item
     Count : int
-}
-
-type Character = {
-    CharacterId: int
-    UserId: string
-    // Name: string
-    // Level: int
-    // Enabled: bool
-    // Inventory: CharacterInventoryItem list
 }
 
 type CombatState = { CombatId : int; PlayerHp : int }
@@ -56,31 +45,19 @@ type Page =
     | CombatPhotocastsMenu
     | PostCombatMenu
 
-type DataResult<'t> = 
-    | Loading
-    | Result of 't
-
 type Msg = 
     | ChangePage of Page
     | LoadPage of (Page * Msg)
-    | ClearCharacter
-    | LoadCharacter of (string * DataResult<Character>)
-    | LoadCharacters of DataResult<Character list>
-    | SubmitCharacter
-    | SubmitCharacterResponse of (int * DataResult<string>)
-    | UpdateCharacter of Character
-    | LoadDungeon of (int * DataResult<DungeonInfo>)
-    | LoadGame of (int * DataResult<Game>)
-    | LoadGames of DataResult<Game list>
-    | LoadShop of (DataResult<ShopItem list>)
+    | LoadDungeon of (int * Types.Shared.DataResult<DungeonInfo>)
+    | LoadShop of (Types.Shared.DataResult<ShopItem list>)
+    | CharacterMsg of App.Types.Character.Msg
+    | GameMsg of App.Types.Game.Msg
     | FailedToLoad of exn
 
 type State = { 
     Count : int
     CurrentPage : Page
-    Character : Character
-    Characters : Character list
     Dungeon : DungeonInfo
-    Game : Game
-    Games : Game list 
-    ShopItems : ShopItem list}
+    ShopItems : ShopItem list
+    GameState : App.Types.Game.GameState
+    CharacterState : App.Types.Character.CharacterState}
