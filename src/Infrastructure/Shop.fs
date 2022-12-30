@@ -12,5 +12,5 @@ let getShopItems () =
 
         let shopItems = Json.parseAs<ShopItem list> responseText
 
-        return Result shopItems
+        return Shared.Result shopItems
     }

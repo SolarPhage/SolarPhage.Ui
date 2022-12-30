@@ -4,7 +4,7 @@ open App.Types
 open SharedTemplate
 open Feliz
 
-let content (state : State) =
+let content (state : Game.GameState) =
     [
         Html.h1 [
             prop.text state.Game.GameId
@@ -34,6 +34,6 @@ let footer (dispatch : Msg -> unit) =
         ]
     ]
 
-let render (state : State) (dispatch: Msg -> unit) = 
+let render (state : Game.GameState) (dispatch: Msg -> unit) = 
     renderMainContentAndFooter (content state) (footer dispatch)
 

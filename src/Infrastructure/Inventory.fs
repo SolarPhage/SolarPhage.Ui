@@ -13,5 +13,5 @@ let putInventory inventory =
 
         let inventoryUpdate = Json.parseAs<InventoryUpdate> responseText
 
-        return (statusCode, Result inventoryUpdate)
+        return (statusCode, Shared.Result inventoryUpdate)
     }

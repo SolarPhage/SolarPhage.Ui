@@ -1,11 +1,14 @@
 import * as main from "./scss/main.scss";
-import { Msg, DataResult$1, State, Game, DungeonInfo, Character as Character_1, Page } from "./Types.fs.js";
+import { Msg as Msg_2, CharacterState, Character } from "./Types/CharacterTypes.fs.js";
 import { ofArray, singleton, empty } from "./fable_modules/fable-library.3.7.20/List.js";
-import { Cmd_none, Cmd_batch } from "./fable_modules/Fable.Elmish.4.0.0/cmd.fs.js";
+import { Msg, GameState, Game } from "./Types/GameTypes.fs.js";
+import { Msg as Msg_1, State, DungeonInfo, Page } from "./Types/AppTypes.fs.js";
+import { Cmd_map, Cmd_none, Cmd_batch } from "./fable_modules/Fable.Elmish.4.0.0/cmd.fs.js";
+import { DataResult$1 } from "./Types/SharedTypes.fs.js";
+import { update as update_1 } from "./Modules/Character.fs.js";
+import { update as update_2 } from "./Modules/Game.fs.js";
 import { Cmd_OfAsync_start, Cmd_OfAsyncWith_either } from "./fable_modules/Fable.Elmish.4.0.0/./cmd.fs.js";
-import { createCharacter, getCharacters, getCharacter } from "./Infrastructure/Character.fs.js";
 import { getDungeon } from "./Infrastructure/Dungeon.fs.js";
-import { getGames, getGame } from "./Infrastructure/Game.fs.js";
 import { getShopItems } from "./Infrastructure/Shop.fs.js";
 import { render as render_1 } from "./Views/CharacterSelect.fs.js";
 import { render as render_2 } from "./Views/CombatMenu.fs.js";
@@ -30,113 +33,70 @@ import { ProgramModule_mkProgram, ProgramModule_run } from "./fable_modules/Fabl
 import { Program_withReactSynchronous } from "./fable_modules/Fable.Elmish.React.3.0.1/react.fs.js";
 
 
+export const initCharacterState = new CharacterState(new Character(0, ""), empty());
+
+export const initGameState = new GameState(new Game(5, 5), empty());
+
 export function init() {
-    return [new State(0, new Page(0), new Character_1(0, ""), empty(), new DungeonInfo(5, 1), new Game(5, 5), empty(), empty()), Cmd_batch(ofArray([singleton((dispatch) => {
-        dispatch(new Msg(10, new DataResult$1(0)));
+    return [new State(0, new Page(0), new DungeonInfo(5, 1), empty(), initGameState, initCharacterState), Cmd_batch(ofArray([singleton((dispatch) => {
+        dispatch(new Msg_1(5, new Msg(1, new DataResult$1(0))));
     }), singleton((dispatch_1) => {
-        dispatch_1(new Msg(4, new DataResult$1(0)));
+        dispatch_1(new Msg_1(4, new Msg_2(2, new DataResult$1(0))));
     })]))];
 }
 
 export function update(msg, state) {
     if (msg.tag === 0) {
         const page_1 = msg.fields[0];
-        return [new State(state.Count, page_1, state.Character, state.Characters, state.Dungeon, state.Game, state.Games, state.ShopItems), Cmd_none()];
-    }
-    else if (msg.tag === 2) {
-        return [new State(state.Count, state.CurrentPage, new Character_1(0, ""), state.Characters, state.Dungeon, state.Game, state.Games, state.ShopItems), Cmd_none()];
-    }
-    else if (msg.tag === 3) {
-        if (msg.fields[0][1].tag === 1) {
-            const character = msg.fields[0][1].fields[0];
-            return [new State(state.Count, state.CurrentPage, character, state.Characters, state.Dungeon, state.Game, state.Games, state.ShopItems), Cmd_none()];
-        }
-        else {
-            const id = msg.fields[0][0];
-            return [state, Cmd_OfAsyncWith_either((x) => {
-                Cmd_OfAsync_start(x);
-            }, getCharacter, id, (arg) => (new Msg(3, arg)), (arg_1) => (new Msg(12, arg_1)))];
-        }
+        return [new State(state.Count, page_1, state.Dungeon, state.ShopItems, state.GameState, state.CharacterState), Cmd_none()];
     }
     else if (msg.tag === 4) {
-        if (msg.fields[0].tag === 1) {
-            const characters = msg.fields[0].fields[0];
-            return [new State(state.Count, state.CurrentPage, state.Character, characters, state.Dungeon, state.Game, state.Games, state.ShopItems), Cmd_none()];
-        }
-        else {
-            return [state, Cmd_OfAsyncWith_either((x_1) => {
-                Cmd_OfAsync_start(x_1);
-            }, getCharacters, void 0, (arg_3) => (new Msg(4, arg_3)), (arg_4) => (new Msg(12, arg_4)))];
-        }
-    }
-    else if (msg.tag === 7) {
-        const character_1 = msg.fields[0];
-        return [new State(state.Count, state.CurrentPage, character_1, state.Characters, state.Dungeon, state.Game, state.Games, state.ShopItems), Cmd_none()];
+        const characterMsg = msg.fields[0];
+        const patternInput = update_1(characterMsg, state.CharacterState);
+        const cmd = patternInput[1];
+        const cState = patternInput[0];
+        const appCmd = Cmd_map((x) => (new Msg_1(4, x)), cmd);
+        return [new State(state.Count, state.CurrentPage, state.Dungeon, state.ShopItems, state.GameState, cState), appCmd];
     }
     else if (msg.tag === 5) {
-        return [state, Cmd_OfAsyncWith_either((x_2) => {
-            Cmd_OfAsync_start(x_2);
-        }, createCharacter, state.Character, (arg_6) => (new Msg(6, arg_6)), (arg_7) => (new Msg(12, arg_7)))];
+        const gameMsg = msg.fields[0];
+        const patternInput_1 = update_2(gameMsg, state.GameState);
+        const gState = patternInput_1[0];
+        const cmd_1 = patternInput_1[1];
+        const appCmd_1 = Cmd_map((x_1) => (new Msg_1(5, x_1)), cmd_1);
+        return [new State(state.Count, state.CurrentPage, state.Dungeon, state.ShopItems, gState, state.CharacterState), appCmd_1];
     }
-    else if (msg.tag === 6) {
-        return [state, singleton((dispatch_1) => {
-            dispatch_1(new Msg(2));
-        })];
-    }
-    else if (msg.tag === 8) {
+    else if (msg.tag === 2) {
         if (msg.fields[0][1].tag === 1) {
             const dungeon = msg.fields[0][1].fields[0];
-            return [new State(state.Count, state.CurrentPage, state.Character, state.Characters, dungeon, state.Game, state.Games, state.ShopItems), Cmd_none()];
+            return [new State(state.Count, state.CurrentPage, dungeon, state.ShopItems, state.GameState, state.CharacterState), Cmd_none()];
         }
         else {
-            const id_1 = msg.fields[0][0] | 0;
-            return [state, Cmd_OfAsyncWith_either((x_3) => {
-                Cmd_OfAsync_start(x_3);
-            }, getDungeon, id_1, (arg_9) => (new Msg(8, arg_9)), (arg_10) => (new Msg(12, arg_10)))];
+            const id = msg.fields[0][0] | 0;
+            return [state, Cmd_OfAsyncWith_either((x_2) => {
+                Cmd_OfAsync_start(x_2);
+            }, getDungeon, id, (arg) => (new Msg_1(2, arg)), (arg_1) => (new Msg_1(6, arg_1)))];
         }
     }
-    else if (msg.tag === 9) {
-        if (msg.fields[0][1].tag === 1) {
-            const game = msg.fields[0][1].fields[0];
-            return [new State(state.Count, state.CurrentPage, state.Character, state.Characters, state.Dungeon, game, state.Games, state.ShopItems), Cmd_none()];
-        }
-        else {
-            const id_2 = msg.fields[0][0] | 0;
-            return [state, Cmd_OfAsyncWith_either((x_4) => {
-                Cmd_OfAsync_start(x_4);
-            }, getGame, id_2, (arg_12) => (new Msg(9, arg_12)), (arg_13) => (new Msg(12, arg_13)))];
-        }
-    }
-    else if (msg.tag === 10) {
-        if (msg.fields[0].tag === 1) {
-            const games = msg.fields[0].fields[0];
-            return [new State(state.Count, state.CurrentPage, state.Character, state.Characters, state.Dungeon, state.Game, games, state.ShopItems), Cmd_none()];
-        }
-        else {
-            return [state, Cmd_OfAsyncWith_either((x_5) => {
-                Cmd_OfAsync_start(x_5);
-            }, getGames, void 0, (arg_15) => (new Msg(10, arg_15)), (arg_16) => (new Msg(12, arg_16)))];
-        }
-    }
-    else if (msg.tag === 11) {
+    else if (msg.tag === 3) {
         if (msg.fields[0].tag === 1) {
             const items = msg.fields[0].fields[0];
-            return [new State(state.Count, state.CurrentPage, state.Character, state.Characters, state.Dungeon, state.Game, state.Games, items), Cmd_none()];
+            return [new State(state.Count, state.CurrentPage, state.Dungeon, items, state.GameState, state.CharacterState), Cmd_none()];
         }
         else {
-            return [state, Cmd_OfAsyncWith_either((x_6) => {
-                Cmd_OfAsync_start(x_6);
-            }, getShopItems, void 0, (arg_18) => (new Msg(11, arg_18)), (arg_19) => (new Msg(12, arg_19)))];
+            return [state, Cmd_OfAsyncWith_either((x_3) => {
+                Cmd_OfAsync_start(x_3);
+            }, getShopItems, void 0, (arg_3) => (new Msg_1(3, arg_3)), (arg_4) => (new Msg_1(6, arg_4)))];
         }
     }
-    else if (msg.tag === 12) {
+    else if (msg.tag === 6) {
         const error = msg.fields[0];
         return [state, Cmd_none()];
     }
     else {
         const command = msg.fields[0][1];
         const page = msg.fields[0][0];
-        return [new State(state.Count, page, state.Character, state.Characters, state.Dungeon, state.Game, state.Games, state.ShopItems), singleton((dispatch) => {
+        return [new State(state.Count, page, state.Dungeon, state.ShopItems, state.GameState, state.CharacterState), singleton((dispatch) => {
             dispatch(command);
         })];
     }
@@ -146,7 +106,7 @@ export function render(state, dispatch) {
     const matchValue = state.CurrentPage;
     switch (matchValue.tag) {
         case 1: {
-            return render_1(state, dispatch);
+            return render_1(state.CharacterState, dispatch);
         }
         case 15: {
             return render_2(dispatch);
@@ -158,7 +118,7 @@ export function render(state, dispatch) {
             return render_4(dispatch);
         }
         case 3: {
-            return render_5(state, dispatch);
+            return render_5(state.CharacterState, dispatch);
         }
         case 4: {
             return render_6(dispatch);
@@ -200,7 +160,7 @@ export function render(state, dispatch) {
             return render_18(state, dispatch);
         }
         default: {
-            return render_19(state, dispatch);
+            return render_19(state.GameState, dispatch);
         }
     }
 }

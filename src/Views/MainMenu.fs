@@ -19,23 +19,23 @@ let createHeaderColumnDiv (title : string) =
         ]
     ]
 
-let createGamesCells (game : Game) (dispatch: Msg -> unit) : seq<ReactElement> = 
+let createGamesCells (game : Game.Game) (dispatch: Msg -> unit) : seq<ReactElement> = 
     [
         Html.tableCell [ 
             Html.a [
                 prop.text $"{game.GameId}"
-                prop.onClick (fun _ -> dispatch <| LoadPage (ActiveGameMenu, LoadGame(game.GameId, Loading)))
+                prop.onClick (fun _ -> dispatch <| LoadPage (ActiveGameMenu, GameMsg(Game.LoadGame(game.GameId, Shared.Loading))))
             ]
         ]
         Html.tableCell [ prop.text $"{game.MaxFloor}"]
     ]
 
-let createCharactersCells (character : Character) (dispatch: Msg -> unit) : seq<ReactElement> = 
+let createCharactersCells (character : Character.Character) (dispatch: Msg -> unit) : seq<ReactElement> = 
     [
         Html.tableCell [ 
             Html.a [
                 prop.text $"{character.CharacterId}"
-                prop.onClick (fun _ -> dispatch <| LoadPage (CharacterSelect, LoadCharacter(character.UserId, Loading)))
+                prop.onClick (fun _ -> dispatch <| LoadPage (CharacterSelect, CharacterMsg(Character.LoadCharacter(character.UserId, Shared.Loading))))
             ]
         ]
         Html.tableCell [ prop.text $"{character.UserId}"]
@@ -59,7 +59,7 @@ let content (state : State) (dispatch: Msg -> unit) =
                 createTable  [
                     createTableHeaders ["Game ID"; "Max Floor"]
                     createTableBody (
-                        state.Games
+                        state.GameState.Games
                         |> Seq.map (fun x -> createGameTableRow <| createGamesCells x dispatch))
                 ]
             ]
@@ -68,7 +68,7 @@ let content (state : State) (dispatch: Msg -> unit) =
                 createTable [
                     createTableHeaders ["Name"; "Level"]
                     createTableBody (
-                        state.Characters
+                        state.CharacterState.Characters
                         |> Seq.map (fun x -> createGameTableRow <| createCharactersCells x dispatch))
                 ]
             ]

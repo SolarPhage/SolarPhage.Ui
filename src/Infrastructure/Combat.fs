@@ -14,7 +14,7 @@ let postCombatState state =
 
         let combatState = Json.parseAs<CombatState> responseText
 
-        return (statusCode, Result combatState)
+        return (statusCode, Shared.Result combatState)
     }
 
 let getCombat (combatId : int) = 
@@ -23,5 +23,5 @@ let getCombat (combatId : int) =
 
         let combatState = Json.parseAs<CombatState> responseText
 
-        return (combatId, Result combatState)
+        return (combatId, Shared.Result combatState)
     }

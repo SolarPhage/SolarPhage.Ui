@@ -8,61 +8,56 @@ open Fable.Core.JsInterop
 
 importAll "./scss/main.scss"
 
+let initCharacterState = 
+    {
+        Character.Character = { CharacterId = 0; UserId = ""; }
+        Character.Characters = []
+    }
+
+let initGameState = 
+    {
+        Game.Game = { GameId = 5; MaxFloor = 5 }
+        Game.Games = [] 
+    }
+
 let init() = { 
     Count = 0
     CurrentPage = MainMenu
-    Character = { CharacterId = 0; UserId = ""; }
-    Characters = []
     Dungeon = { DungeonId = 5; Level = 1}
-    Game = { GameId = 5; MaxFloor = 5 }
-    Games = [] 
-    ShopItems = []}, Cmd.batch [Cmd.ofMsg (LoadGames Loading); Cmd.ofMsg (LoadCharacters Loading)]
+    ShopItems = []
+    CharacterState = initCharacterState
+    GameState = initGameState}, Cmd.batch [Cmd.ofMsg (GameMsg (Game.LoadGames Shared.Loading)); Cmd.ofMsg (CharacterMsg (Character.LoadCharacters Shared.Loading))]
     
 let update (msg: Msg) (state: State) = 
     match msg with
     | LoadPage (page, command) -> { state with CurrentPage = page }, Cmd.ofMsg command
     | ChangePage page -> { state with CurrentPage = page }, Cmd.none
-    | ClearCharacter -> { state with Character = { UserId = ""; CharacterId = 0 }}, Cmd.none
-    | LoadCharacter (id, Loading) -> 
-        state, Cmd.OfAsync.either Infrastructure.Character.getCharacter id LoadCharacter FailedToLoad
-    | LoadCharacter (_, Result character) ->
-        { state with Character = character }, Cmd.none
-    | LoadCharacters Loading ->
-        state, Cmd.OfAsync.either Infrastructure.Character.getCharacters () LoadCharacters FailedToLoad
-    | LoadCharacters (Result characters) ->
-        { state with Characters = characters }, Cmd.none
-    | UpdateCharacter character ->
-        { state with Character = character }, Cmd.none
-    | SubmitCharacter -> 
-        state, Cmd.OfAsync.either Infrastructure.Character.createCharacter state.Character SubmitCharacterResponse FailedToLoad
-    | SubmitCharacterResponse _ ->
-        state, Cmd.ofMsg ClearCharacter
-    | LoadDungeon (id, Loading) -> 
+    | CharacterMsg characterMsg -> 
+        let (cState, cmd) = App.Character.update characterMsg state.CharacterState
+        let appCmd = Cmd.map (fun x -> CharacterMsg x) cmd
+        { state with CharacterState = cState }, appCmd
+    | GameMsg gameMsg -> 
+        let (gState, cmd) = App.Game.update gameMsg state.GameState
+        let appCmd = Cmd.map (fun x -> GameMsg x) cmd
+        { state with GameState = gState }, appCmd
+    | LoadDungeon (id, Shared.Loading) -> 
         state, Cmd.OfAsync.either Infrastructure.Dungeon.getDungeon id LoadDungeon FailedToLoad
-    | LoadDungeon (_, Result dungeon) ->
+    | LoadDungeon (_, Shared.Result dungeon) ->
         { state with Dungeon = dungeon }, Cmd.none  
-    | LoadGame (id, Loading) -> 
-        state, Cmd.OfAsync.either Infrastructure.Game.getGame id LoadGame FailedToLoad
-    | LoadGame (_, Result game) ->
-        { state with Game = game }, Cmd.none        
-    | LoadGames Loading ->
-        state, Cmd.OfAsync.either Infrastructure.Game.getGames () LoadGames FailedToLoad
-    | LoadGames (Result games) ->
-        { state with Games = games }, Cmd.none
-    | LoadShop Loading ->
+    | LoadShop Shared.Loading ->
         state, Cmd.OfAsync.either Infrastructure.Shop.getShopItems () LoadShop FailedToLoad
-    | LoadShop (Result items) ->
+    | LoadShop (Shared.Result items) ->
         { state with ShopItems = items }, Cmd.none
     | FailedToLoad error -> state, Cmd.none
 
 let render (state: State) (dispatch: Msg -> unit) = 
     match state.CurrentPage with
-    | ActiveGameMenu _ -> ActiveGameMenu.render state dispatch
-    | CharacterSelect _ -> CharacterSelect.render state dispatch
+    | ActiveGameMenu _ -> ActiveGameMenu.render state.GameState dispatch
+    | CharacterSelect _ -> CharacterSelect.render state.CharacterState dispatch
     | CombatMenu -> CombatMenu.render dispatch
     | CombatPhotocastsMenu -> CombatPhotocastsMenu.render dispatch
     | CombatPotionMenu -> CombatPotionMenu.render dispatch
-    | CreateCharacter -> CreateCharacter.render state dispatch
+    | CreateCharacter -> CreateCharacter.render state.CharacterState dispatch
     | CreateGame -> CreateGame.render dispatch
     | DungeonMenu -> DungeonMenu.render state dispatch
     | GameCharacterMenu -> GameCharacterMenu.render dispatch
