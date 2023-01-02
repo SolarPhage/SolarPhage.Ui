@@ -1,10 +1,12 @@
-module CharacterSelect
+module Character.Views.CharacterSelect
 
-open App.Types
-open SharedTemplate
+open Character.Types
+open Messages
+open Types
+open Templates.Shared
 open Feliz
 
-let content (state : Character.CharacterState) = 
+let content (state : CharacterState) = 
     [
         Html.h1 [
             prop.text state.Character.CharacterId
@@ -14,7 +16,7 @@ let content (state : Character.CharacterState) =
         ]
     ]
 
-let footer (dispatch: Msg -> unit) = 
+let footer (dispatch: MainMessage -> unit) = 
     [
         Html.button [
             prop.className[ "button" ]
@@ -28,5 +30,5 @@ let footer (dispatch: Msg -> unit) =
         ]
     ]
 
-let render (state : Character.CharacterState) (dispatch: Msg -> unit) = 
+let render (state : CharacterState) (dispatch: MainMessage -> unit) = 
     renderMainContentAndFooter (content state) (footer dispatch)

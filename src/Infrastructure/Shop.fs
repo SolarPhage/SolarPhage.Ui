@@ -2,7 +2,8 @@ module Infrastructure.Shop
 
 open Fable.SimpleHttp
 open Fable.SimpleJson
-open App.Types
+open Types
+open Main.Types
 
 let shopUrl = $"{Api.apiUrl}/shop"
 
@@ -12,5 +13,5 @@ let getShopItems () =
 
         let shopItems = Json.parseAs<ShopItem list> responseText
 
-        return Shared.Result shopItems
+        return Result shopItems
     }

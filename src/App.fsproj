@@ -3,27 +3,33 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Types/SharedTypes.fs" />
-    <Compile Include="Types/CharacterTypes.fs" />
-    <Compile Include="Types/GameTypes.fs" />
-    <Compile Include="Types/AppTypes.fs" />
-    <Compile Include="Infrastructure/Api.fs" />
-    <Compile Include="Infrastructure/Character.fs" />
+    <Compile Include="Apps/Types.fs" />
+    <Compile Include="Apps/Character/Types.fs" />
+    <Compile Include="Apps/Game/Types.fs" />
+    <Compile Include="Apps/Messages.fs" />
+    <Compile Include="Apps/Api.fs" />
+    <Compile Include="Apps/Templates/Shared.fs" />
+    <Compile Include="Apps/Templates/Table.fs" />
+    <Compile Include="Apps/Character/Infrastructure.fs" />
+    <Compile Include="Apps/Character/App.fs" />
+    <Compile Include="Apps/Character/Views/CharacterSelect.fs" />
+    <Compile Include="Apps/Character/Views/CreateCharacter.fs" />
+    <Compile Include="Apps/Game/Infrastructure.fs" />
+    <Compile Include="Apps/Game/App.fs" />
+    <Compile Include="Apps/Game/Views/CreateGame.fs" />
+    <Compile Include="Apps/Main/Types.fs" />
+    <Compile Include="Apps/Main/App.fs" />
+    <Compile Include="Apps/Main/Infrastructure.fs" />
+    <Compile Include="Apps/Main/Views/View.fs" />
     <Compile Include="Infrastructure/Combat.fs" />
     <Compile Include="Infrastructure/Dungeon.fs" />
-    <Compile Include="Infrastructure/Game.fs" />
     <Compile Include="Infrastructure/Inventory.fs" />
     <Compile Include="Infrastructure/Item.fs" />
     <Compile Include="Infrastructure/Shop.fs" />
-    <Compile Include="Views/Templates/SharedTemplate.fs" />
-    <Compile Include="Views/Templates/TableTemplate.fs" />
     <Compile Include="Views/ActiveGameMenu.fs" />
-    <Compile Include="Views/CharacterSelect.fs" />
     <Compile Include="Views/CombatMenu.fs" />
     <Compile Include="Views/CombatPhotocastsMenu.fs" />
     <Compile Include="Views/CombatPotionMenu.fs" />
-    <Compile Include="Views/CreateCharacter.fs" />
-    <Compile Include="Views/CreateGame.fs" />
     <Compile Include="Views/DungeonMenu.fs" />
     <Compile Include="Views/GameCharacterMenu.fs" />
     <Compile Include="Views/GameInventoryMenu.fs" />
@@ -36,8 +42,6 @@
     <Compile Include="Views/ShopInventoryItem.fs" />
     <Compile Include="Views/ShopMenu.fs" />
     <Compile Include="Views/TownMenu.fs" />
-    <Compile Include="Modules/Character.fs" />
-    <Compile Include="Modules/Game.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>

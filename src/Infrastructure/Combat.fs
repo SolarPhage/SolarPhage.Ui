@@ -2,7 +2,8 @@ module Infrastructure.Combat
 
 open Fable.SimpleHttp
 open Fable.SimpleJson
-open App.Types
+open Types
+open Main.Types
 
 let combatUrl = $"{Api.apiUrl}/combat"
 let combatIdUrl id = $"{Api.apiUrl}/combat/{id}"
@@ -14,7 +15,7 @@ let postCombatState state =
 
         let combatState = Json.parseAs<CombatState> responseText
 
-        return (statusCode, Shared.Result combatState)
+        return (statusCode, Result combatState)
     }
 
 let getCombat (combatId : int) = 
@@ -23,5 +24,5 @@ let getCombat (combatId : int) =
 
         let combatState = Json.parseAs<CombatState> responseText
 
-        return (combatId, Shared.Result combatState)
+        return (combatId, Result combatState)
     }

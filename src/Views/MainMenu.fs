@@ -1,8 +1,12 @@
 module MainMenu
 
-open App.Types
-open SharedTemplate
-open TableTemplate
+open Messages
+open Types
+open Main.Types
+open Character.Types
+open Game.Types
+open Templates.Shared
+open Templates.Table
 open Feliz
 
 let createColumnsDiv (children : seq<ReactElement>) = 
@@ -19,23 +23,23 @@ let createHeaderColumnDiv (title : string) =
         ]
     ]
 
-let createGamesCells (game : Game.Game) (dispatch: Msg -> unit) : seq<ReactElement> = 
+let createGamesCells (game : Game) (dispatch: MainMessage -> unit) : seq<ReactElement> = 
     [
         Html.tableCell [ 
             Html.a [
                 prop.text $"{game.GameId}"
-                prop.onClick (fun _ -> dispatch <| LoadPage (ActiveGameMenu, GameMsg(Game.LoadGame(game.GameId, Shared.Loading))))
+                prop.onClick (fun _ -> dispatch <| LoadPage (ActiveGameMenu, GameMsg(LoadGame(game.GameId, Loading))))
             ]
         ]
         Html.tableCell [ prop.text $"{game.MaxFloor}"]
     ]
 
-let createCharactersCells (character : Character.Character) (dispatch: Msg -> unit) : seq<ReactElement> = 
+let createCharactersCells (character : Character) (dispatch: MainMessage -> unit) : seq<ReactElement> = 
     [
         Html.tableCell [ 
             Html.a [
                 prop.text $"{character.CharacterId}"
-                prop.onClick (fun _ -> dispatch <| LoadPage (CharacterSelect, CharacterMsg(Character.LoadCharacter(character.UserId, Shared.Loading))))
+                prop.onClick (fun _ -> dispatch <| LoadPage (CharacterSelect, CharacterMsg(LoadCharacter(character.UserId, Loading))))
             ]
         ]
         Html.tableCell [ prop.text $"{character.UserId}"]
@@ -47,7 +51,7 @@ let createTableColumnDiv (children : seq<ReactElement>) =
         prop.children children
     ]
 
-let content (state : State) (dispatch: Msg -> unit) = 
+let content (state : State) (dispatch: MainMessage -> unit) = 
     [
         createColumnsDiv [
             createHeaderColumnDiv "Games"
@@ -75,7 +79,7 @@ let content (state : State) (dispatch: Msg -> unit) =
         ]
     ]
 
-let footer (dispatch: Msg -> unit) = 
+let footer (dispatch: MainMessage -> unit) = 
     [
         Html.button [
             prop.className[ "button" ]
@@ -90,5 +94,5 @@ let footer (dispatch: Msg -> unit) =
         ]
     ]
 
-let render (state : State) (dispatch: Msg -> unit) = 
+let render (state : State) (dispatch: MainMessage -> unit) = 
     renderMainContentAndFooter (content state dispatch) (footer dispatch)

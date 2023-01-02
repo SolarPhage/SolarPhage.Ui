@@ -1,4 +1,4 @@
-module TableTemplate
+module Templates.Table
 
 open Feliz
 
