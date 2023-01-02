@@ -1,4 +1,4 @@
-module SharedTemplate
+module Templates.Shared
 
 open Feliz
 

@@ -1,7 +1,9 @@
 module TownMenu
 
-open App.Types
-open SharedTemplate
+open Messages
+open Types
+open Main.Types
+open Templates.Shared
 open Feliz
 
 let content = 
@@ -11,19 +13,19 @@ let content =
         ]
     ]
 
-let footer (state : State) (dispatch: Msg -> unit) = 
+let footer (state : State) (dispatch: MainMessage -> unit) = 
     [
-        Html.button [
-            prop.className[ "button" ]
-            prop.onClick (fun _ -> dispatch <| LoadPage(ShopMenu, LoadShop Shared.Loading))
-            prop.text "Shop"
-        ]
+        // Html.button [
+        //     prop.className[ "button" ]
+        //     prop.onClick (fun _ -> dispatch <| LoadPage(ShopMenu, LoadShop Shared.Loading))
+        //     prop.text "Shop"
+        // ]
 
-        Html.button [
-            prop.className[ "button" ]
-            prop.onClick (fun _ -> dispatch <| LoadPage(DungeonMenu, LoadDungeon(state.Dungeon.DungeonId, Shared.Loading)))
-            prop.text "Dungeon"
-        ]
+        // Html.button [
+        //     prop.className[ "button" ]
+        //     prop.onClick (fun _ -> dispatch <| LoadPage(DungeonMenu, LoadDungeon(state.Dungeon.DungeonId, Shared.Loading)))
+        //     prop.text "Dungeon"
+        // ]
 
         Html.button [
             prop.className[ "button" ]
@@ -32,5 +34,5 @@ let footer (state : State) (dispatch: Msg -> unit) =
         ]
     ]
 
-let render (state : State) (dispatch: Msg -> unit) = 
+let render (state : State) (dispatch: MainMessage -> unit) = 
     renderMainContentAndFooter content (footer state dispatch)

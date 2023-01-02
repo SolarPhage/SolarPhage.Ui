@@ -2,7 +2,8 @@ module Infrastructure.Inventorylet
 
 open Fable.SimpleHttp
 open Fable.SimpleJson
-open App.Types
+open Types
+open Main.Types
 
 let inventoryUrl = $"{Api.apiUrl}/inventory"
 
@@ -13,5 +14,5 @@ let putInventory inventory =
 
         let inventoryUpdate = Json.parseAs<InventoryUpdate> responseText
 
-        return (statusCode, Shared.Result inventoryUpdate)
+        return (statusCode, Result inventoryUpdate)
     }

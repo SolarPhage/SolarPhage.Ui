@@ -1,7 +1,9 @@
 module ShopMenu
 
-open App.Types
-open SharedTemplate
+open Messages
+open Types
+open Main.Types
+open Templates.Shared
 open Feliz
 
 let content (state : State) = 
@@ -16,7 +18,7 @@ let content (state : State) =
         ]
     ]
 
-let footer (dispatch: Msg -> unit) = 
+let footer (dispatch: MainMessage -> unit) = 
     [
         Html.label [
             prop.onClick (fun _ -> dispatch <| ChangePage ShopBuyItem)
@@ -35,6 +37,6 @@ let footer (dispatch: Msg -> unit) =
         ]
     ]
 
-let render (state : State) (dispatch: Msg -> unit) = 
+let render (state : State) (dispatch: MainMessage -> unit) = 
     renderMainContentAndFooter (content state) (footer dispatch)
 

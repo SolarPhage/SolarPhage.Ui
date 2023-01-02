@@ -2,7 +2,8 @@ module Infrastructure.Dungeon
 
 open Fable.SimpleHttp
 open Fable.SimpleJson
-open App.Types
+open Types
+open Main.Types
 
 let dungeonUrl = $"{Api.apiUrl}/dungeon"
 let dungeonIdUrl id = $"{Api.apiUrl}/dungeon/{id}"
@@ -14,7 +15,7 @@ let postDungeon dungeon =
 
         let dungeonInfo = Json.parseAs<DungeonInfo> responseText
 
-        return (statusCode, Shared.Result dungeonInfo)
+        return (statusCode, Result dungeonInfo)
     }
 
 let getDungeon (dungeonId : int) = 
@@ -23,5 +24,5 @@ let getDungeon (dungeonId : int) =
 
         let dungeonInfo = Json.parseAs<DungeonInfo> responseText
 
-        return (dungeonId, Shared.Result dungeonInfo)
+        return (dungeonId, Result dungeonInfo)
     }

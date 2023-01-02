@@ -1,4 +1,4 @@
-module Infrastructure.Api
+module Api
 
 open Fable.Core
 

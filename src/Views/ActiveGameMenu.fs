@@ -1,10 +1,12 @@
 module ActiveGameMenu
 
-open App.Types
-open SharedTemplate
+open Types
+open Game.Types
+open Messages
+open Templates.Shared
 open Feliz
 
-let content (state : Game.GameState) =
+let content (state : GameState) =
     [
         Html.h1 [
             prop.text state.Game.GameId
@@ -14,7 +16,7 @@ let content (state : Game.GameState) =
         ]
     ]
 
-let footer (dispatch : Msg -> unit) = 
+let footer (dispatch : MainMessage -> unit) = 
     [
         Html.button [
             prop.className[ "button" ]
@@ -34,6 +36,6 @@ let footer (dispatch : Msg -> unit) =
         ]
     ]
 
-let render (state : Game.GameState) (dispatch: Msg -> unit) = 
+let render (state : GameState) (dispatch: MainMessage -> unit) = 
     renderMainContentAndFooter (content state) (footer dispatch)
 

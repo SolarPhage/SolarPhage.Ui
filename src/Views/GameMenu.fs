@@ -1,7 +1,8 @@
 module GameMenu
 
-open App.Types
-open SharedTemplate
+open Messages
+open Types
+open Templates.Shared
 open Feliz
 
 let content = 
@@ -11,7 +12,7 @@ let content =
         ]
     ]
 
-let footer (dispatch: Msg -> unit) = 
+let footer (dispatch: MainMessage -> unit) = 
     [
         Html.button [
             prop.className[ "button" ]
@@ -32,5 +33,5 @@ let footer (dispatch: Msg -> unit) =
         ]
     ]
 
-let render (dispatch: Msg -> unit) = 
+let render (dispatch: MainMessage -> unit) = 
     renderMainContentAndFooter content (footer dispatch)

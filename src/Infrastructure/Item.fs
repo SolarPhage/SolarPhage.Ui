@@ -2,7 +2,8 @@ module Infrastructure.Item
 
 open Fable.SimpleHttp
 open Fable.SimpleJson
-open App.Types
+open Types
+open Main.Types
 
 let itemIdUrl id = $"{Api.apiUrl}/item/{id}"
 
@@ -12,5 +13,5 @@ let getItem (itemId : int) =
 
         let itemInfo = Json.parseAs<Item> responseText
 
-        return (itemId, Shared.Result itemInfo)
+        return (itemId, Result itemInfo)
     }

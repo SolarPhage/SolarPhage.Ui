@@ -1,9 +1,9 @@
-module Infrastructure.Character
+module Character.Infrastructure
 
 open Fable.SimpleHttp
 open Fable.SimpleJson
-open App.Types
-open Fable.Core.JS
+open Types
+
 
 let charactersUrl = $"{Api.apiUrl}/character"
 let characterUrl id = $"{Api.apiUrl}/character/{id}"
@@ -12,23 +12,23 @@ let getCharacters () =
     async {
         let! (statusCode, responseText) = Http.get charactersUrl
 
-        let characters = Json.parseAs<Character.Character list> responseText
+        let characters = Json.parseAs<Character list> responseText
 
-        return Shared.Result characters
+        return Result characters
     }
 
 let getCharacter (characterId : string) = 
     async {
         let! (statusCode, responseText) = Http.get <| characterUrl characterId
 
-        let character = List.head (Json.parseAs<Character.Character list> responseText)
+        let character = List.head (Json.parseAs<Character list> responseText)
         
-        return (characterId, Shared.Result character)
+        return (characterId, Result character)
     }
 
-let createCharacter (character : Character.Character) = 
+let createCharacter (character : Character) = 
     async {
         let! (statusCode, responseText) = Http.post charactersUrl <| Json.serialize character
 
-        return (statusCode, Shared.Result responseText)
+        return (statusCode, Result responseText)
     }
