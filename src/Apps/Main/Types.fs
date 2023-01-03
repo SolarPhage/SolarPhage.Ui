@@ -1,30 +1,8 @@
 module Main.Types
 
 open Types
-
-type Item = {
-    Id: int
-    Name: string
-}
-
-type CharacterInventoryItem = {
-    Item : Item
-    Count : int
-}
-
-type CombatState = { CombatId : int; PlayerHp : int }
-type DungeonInfo = { DungeonId: int; Level : int }
-type InventoryUpdate = {
-    CharacterId : int
-    ItemId : int
-    Amount : int
-    Cost : int
-}
-type ShopItem = {
-    ItemInfo : Item
-    AmountForSale : int
-    CostPerItem : int
-}
+open Dungeon.Types
+open Shop.Types
 
 type State = { 
     Count : int
