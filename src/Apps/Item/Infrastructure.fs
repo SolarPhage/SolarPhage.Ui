@@ -1,9 +1,8 @@
-module Infrastructure.Item
+module Item.Infrastructure
 
 open Fable.SimpleHttp
 open Fable.SimpleJson
 open Types
-open Main.Types
 
 let itemIdUrl id = $"{Api.apiUrl}/item/{id}"
 

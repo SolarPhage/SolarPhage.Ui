@@ -1,9 +1,8 @@
-module Infrastructure.Inventorylet
+module Inventory.Infrastructure
 
 open Fable.SimpleHttp
 open Fable.SimpleJson
 open Types
-open Main.Types
 
 let inventoryUrl = $"{Api.apiUrl}/inventory"
 

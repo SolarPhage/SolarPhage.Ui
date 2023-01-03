@@ -1,9 +1,8 @@
-module Infrastructure.Combat
+module Combat.Infrastructure
 
 open Fable.SimpleHttp
 open Fable.SimpleJson
 open Types
-open Main.Types
 
 let combatUrl = $"{Api.apiUrl}/combat"
 let combatIdUrl id = $"{Api.apiUrl}/combat/{id}"
