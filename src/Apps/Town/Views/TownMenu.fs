@@ -1,4 +1,4 @@
-module TownMenu
+module Town.Views.TownMenu
 
 open Messages
 open Types

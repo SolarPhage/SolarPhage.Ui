@@ -1,4 +1,4 @@
-module MainMenu
+module Main.Views.MainMenu
 
 open Messages
 open Types

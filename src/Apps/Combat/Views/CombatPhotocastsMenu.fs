@@ -1,4 +1,4 @@
-module CombatPhotocastsMenu
+module Combat.Views.CombatPhotocastsMenu
 
 open Messages
 open Types

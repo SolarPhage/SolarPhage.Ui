@@ -1,4 +1,4 @@
-module ShopInventoryItem
+module Game.Views.GameCharacterMenu
 
 open Messages
 open Types
@@ -16,12 +16,13 @@ let footer (dispatch: MainMessage -> unit) =
     [
         Html.button [
             prop.className[ "button" ]
-            prop.text "Sell"
+            prop.onClick (fun _ -> dispatch <| ChangePage GamePhotocastMenu)
+            prop.text "Change Photocasts"
         ]
 
         Html.button [
             prop.className[ "button" ]
-            prop.onClick (fun _ -> dispatch <| ChangePage ShopMenu)
+            prop.onClick (fun _ -> dispatch <| ChangePage GameMenu)
             prop.text "Back"
         ]
     ]

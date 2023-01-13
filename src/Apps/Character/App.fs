@@ -12,9 +12,9 @@ let update (msg: CharacterMessage) (state: CharacterState) =
         state, Cmd.OfAsync.either Infrastructure.getCharacter id LoadCharacter FailedToLoadCharacter
     | LoadCharacter (_, Result character) ->
         { state with Character = character }, Cmd.none
-    | LoadCharacters Loading ->
-        state, Cmd.OfAsync.either Infrastructure.getCharacters () LoadCharacters FailedToLoadCharacter
-    | LoadCharacters (Result characters) ->
+    | LoadCharacters (id, Loading) ->
+        state, Cmd.OfAsync.either Infrastructure.getCharacters id LoadCharacters FailedToLoadCharacter
+    | LoadCharacters (_, Result characters) ->
         { state with Characters = characters }, Cmd.none
     | UpdateCharacter character ->
         { state with Character = character }, Cmd.none

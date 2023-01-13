@@ -1,12 +1,12 @@
-module ShopMenu
+module Shop.Views.ShopMenu
 
 open Messages
 open Types
-open Main.Types
 open Templates.Shared
 open Feliz
+open Shop.Types
 
-let content (state : State) = 
+let content (state : ShopState) = 
     [
         Html.div [
             Html.ul [
@@ -37,6 +37,6 @@ let footer (dispatch: MainMessage -> unit) =
         ]
     ]
 
-let render (state : State) (dispatch: MainMessage -> unit) = 
+let render (state : ShopState) (dispatch: MainMessage -> unit) = 
     renderMainContentAndFooter (content state) (footer dispatch)
 
