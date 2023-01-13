@@ -1,12 +1,12 @@
-module DungeonMenu
+module Dungeon.Views.DungeonMenu
 
 open Messages
 open Types
-open Main.Types
 open Templates.Shared
 open Feliz
+open Dungeon.Types
 
-let content (state : State) = 
+let content (state : DungeonState) = 
     [
         Html.div [
             Html.ul [
@@ -42,5 +42,5 @@ let footer (dispatch: MainMessage -> unit) =
         ]
     ]
 
-let render (state : State) (dispatch: MainMessage -> unit) = 
+let render (state : DungeonState) (dispatch: MainMessage -> unit) = 
     renderMainContentAndFooter (content state) (footer dispatch)

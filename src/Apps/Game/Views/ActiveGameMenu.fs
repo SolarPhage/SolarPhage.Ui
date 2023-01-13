@@ -1,4 +1,4 @@
-module ActiveGameMenu
+module Game.Views.ActiveGameMenu
 
 open Types
 open Game.Types

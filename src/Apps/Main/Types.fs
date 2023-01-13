@@ -1,13 +1,15 @@
 module Main.Types
 
 open Types
+open Character.Types
+open Game.Types
 open Dungeon.Types
 open Shop.Types
 
 type State = { 
     Count : int
     CurrentPage : Page
-    Dungeon : DungeonInfo
-    ShopItems : ShopItem list
-    GameState : Game.Types.GameState
-    CharacterState : Character.Types.CharacterState}
+    DungeonState : DungeonState
+    ShopState : ShopState
+    GameState : GameState
+    CharacterState : CharacterState}

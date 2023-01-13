@@ -8,13 +8,13 @@ open Types
 let charactersUrl = $"{Api.apiUrl}/character"
 let characterUrl id = $"{Api.apiUrl}/character/{id}"
 
-let getCharacters () = 
+let getCharacters (userId : string) = 
     async {
-        let! (statusCode, responseText) = Http.get charactersUrl
+        let! (statusCode, responseText) = Http.get <| characterUrl userId
 
         let characters = Json.parseAs<Character list> responseText
 
-        return Result characters
+        return (userId, Result characters)
     }
 
 let getCharacter (characterId : string) = 

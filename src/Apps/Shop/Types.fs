@@ -7,3 +7,7 @@ type ShopItem = {
     AmountForSale : int
     CostPerItem : int
 }
+
+type ShopState = {
+    ShopItems : ShopItem list
+}

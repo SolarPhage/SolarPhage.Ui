@@ -5,7 +5,16 @@ open Elmish.React
 
 open Messages
 open Types
+open Combat.Views
+open Character.Views
 open Character.Types
+open Dungeon.Types
+open Shop.Types
+open Dungeon.Views
+open Main.Views
+open Shop.Views
+open Game.Views
+open Town.Views
 open Game.Types
 open Main.Types
 open Fable.Core.JsInterop
@@ -18,19 +27,31 @@ let initCharacterState =
         Characters = []
     }
 
+let initDungeonState = 
+    {
+        Dungeon = { DungeonId = 5; Level = 1 }
+    }
+
 let initGameState = 
     {
         Game = { GameId = 5; MaxFloor = 5 }
         Games = [] 
     }
 
-let init() = { 
-    Count = 0
-    CurrentPage = MainMenu
-    Dungeon = { DungeonId = 5; Level = 1}
-    ShopItems = []
-    CharacterState = initCharacterState
-    GameState = initGameState}, Cmd.batch [Cmd.ofMsg (GameMsg (LoadGames Loading)); Cmd.ofMsg (CharacterMsg (LoadCharacters Loading))]
+let initShopState = 
+    {
+        ShopItems = []
+    }
+
+let init() = 
+    { 
+        Count = 0
+        CurrentPage = MainMenu
+        DungeonState = initDungeonState
+        ShopState = initShopState
+        CharacterState = initCharacterState
+        GameState = initGameState
+    }, Cmd.batch [Cmd.ofMsg (GameMsg (LoadGames Loading)); Cmd.ofMsg (CharacterMsg (LoadCharacters ("230598sfljf", Loading)))]
     
 let update (msg: MainMessage) (state: State) = 
     match msg with
@@ -40,30 +61,30 @@ let update (msg: MainMessage) (state: State) =
         let (cState, cmd) = Character.App.update characterMsg state.CharacterState
         let appCmd = Cmd.map (fun x -> CharacterMsg x) cmd
         { state with CharacterState = cState }, appCmd
+    | DungeonMsg msg -> 
+        let (dState, cmd) = Dungeon.App.update msg state.DungeonState
+        let appCmd = Cmd.map (fun x -> DungeonMsg x) cmd
+        { state with DungeonState = dState }, appCmd
     | GameMsg gameMsg -> 
         let (gState, cmd) = Game.App.update gameMsg state.GameState
         let appCmd = Cmd.map (fun x -> GameMsg x) cmd
         { state with GameState = gState }, appCmd
-    // | LoadDungeon (id, Loading) -> 
-    //     state, Cmd.OfAsync.either Infrastructure.Dungeon.getDungeon id LoadDungeon FailedToLoad
-    // | LoadDungeon (_, Result dungeon) ->
-    //     { state with Dungeon = dungeon }, Cmd.none  
-    // | LoadShop Loading ->
-    //     state, Cmd.OfAsync.either Infrastructure.Shop.getShopItems () LoadShop FailedToLoad
-    // | LoadShop (Result items) ->
-    //     { state with ShopItems = items }, Cmd.none
+    | ShopMsg msg -> 
+        let (sState, cmd) = Shop.App.update msg state.ShopState
+        let appCmd = Cmd.map (fun x -> ShopMsg x) cmd
+        { state with ShopState = sState }, appCmd   
     | FailedToLoad error -> state, Cmd.none
 
 let render (state: State) (dispatch: MainMessage -> unit) = 
     match state.CurrentPage with
     | ActiveGameMenu _ -> ActiveGameMenu.render state.GameState dispatch
-    | CharacterSelect _ -> Character.Views.CharacterSelect.render state.CharacterState dispatch
+    | CharacterSelect _ -> CharacterSelect.render state.CharacterState dispatch
     | CombatMenu -> CombatMenu.render dispatch
     | CombatPhotocastsMenu -> CombatPhotocastsMenu.render dispatch
     | CombatPotionMenu -> CombatPotionMenu.render dispatch
-    | CreateCharacter -> Character.Views.CharacterSelect.render state.CharacterState dispatch
-    | CreateGame -> Game.Views.CreateGame.render dispatch
-    | DungeonMenu -> DungeonMenu.render state dispatch
+    | CreateCharacter -> CreateCharacter.render state.CharacterState dispatch
+    | CreateGame -> CreateGame.render dispatch
+    | DungeonMenu -> DungeonMenu.render state.DungeonState dispatch
     | GameCharacterMenu -> GameCharacterMenu.render dispatch
     | GameInventoryMenu -> GameInventoryMenu.render dispatch
     | GameInventoryPhotocastMenu -> GameInventoryPhotocastMenu.render dispatch
@@ -73,7 +94,7 @@ let render (state: State) (dispatch: MainMessage -> unit) =
     | PostCombatMenu -> PostCombatMenu.render dispatch
     | ShopBuyItem -> ShopBuyItem.render dispatch
     | ShopInventoryItem -> ShopInventoryItem.render dispatch
-    | ShopMenu -> ShopMenu.render state dispatch
+    | ShopMenu -> ShopMenu.render state.ShopState dispatch
     | TownMenu -> TownMenu.render state dispatch
 
 Program.mkProgram init update render

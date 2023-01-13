@@ -1,4 +1,4 @@
-module CombatMenu
+module Game.Views.GameMenu
 
 open Messages
 open Types
@@ -16,19 +16,14 @@ let footer (dispatch: MainMessage -> unit) =
     [
         Html.button [
             prop.className[ "button" ]
-            prop.text "Attack"
+            prop.onClick (fun _ -> dispatch <| ChangePage GameCharacterMenu)
+            prop.text "Character"
         ]
 
         Html.button [
             prop.className[ "button" ]
-            prop.onClick (fun _ -> dispatch <| ChangePage CombatPotionMenu)
-            prop.text "Potion"
-        ]
-
-        Html.button [
-            prop.className[ "button" ]
-            prop.onClick (fun _ -> dispatch <| ChangePage CombatPhotocastsMenu)
-            prop.text "Photocasts"
+            prop.onClick (fun _ -> dispatch <| ChangePage GameInventoryMenu)
+            prop.text "Inventory"
         ]
 
         Html.button [

@@ -1,4 +1,4 @@
-module ShopBuyItem
+module Combat.Views.CombatPotionMenu
 
 open Messages
 open Types
@@ -16,12 +16,12 @@ let footer (dispatch: MainMessage -> unit) =
     [
         Html.button [
             prop.className[ "button" ]
-            prop.text "Buy"
+            prop.text "Use"
         ]
 
         Html.button [
             prop.className[ "button" ]
-            prop.onClick (fun _ -> dispatch <| ChangePage ShopMenu)
+            prop.onClick (fun _ -> dispatch <| ChangePage CombatMenu)
             prop.text "Back"
         ]
     ]
